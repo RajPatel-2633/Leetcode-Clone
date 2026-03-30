@@ -1,4 +1,4 @@
-import ApiResponse from "../utils/ApiReponse.utils.js";
+import {ApiResponse} from "../utils/ApiReponse.utils.js";
 import { ApiError } from "../utils/ApiError.utils.js";
 
 const errorHandler = async(err,req,res,next)=>{

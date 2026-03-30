@@ -4,7 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import pkg from "@prisma/client";
 const {PrismaClient,UserRole}=pkg;
-import ApiResponse from "../utils/ApiReponse.utils.js";
+import cookieParser from "cookie-parser";
+import {ApiResponse} from "../utils/ApiReponse.utils.js";
 
 const registerUser = async(req,res,next)=>{
     const {email,name, password} = req.body;
@@ -61,8 +62,8 @@ const loginUser = async(req,res,next)=>{
 
         res.cookie("jwt",token,{
             httpOnly:true,
-            sameSite:"strict",
-            secure:process.env.NODE_ENV!=="development",
+            sameSite:"lax",
+            secure:false,
             maxAge:1000*60*60*24*7
         })
 
