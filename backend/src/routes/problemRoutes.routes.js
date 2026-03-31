@@ -16,5 +16,4 @@ router.delete('/delete-problem/:id',authMiddleware,checkAdmin,deleteProblem);
 
 router.get('/get-solved-problems',authMiddleware,getAllProblemsByUser);
 
-
 export default router;

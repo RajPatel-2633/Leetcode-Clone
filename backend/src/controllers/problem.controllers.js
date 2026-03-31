@@ -82,11 +82,32 @@ const createProblem = async(req,res,next)=>{
 }
 
 const getAllProblems = async(req,res,next)=>{
-
+    try{
+        const problems = await db.problem.findMany();
+        return res.status(200).json(
+    ApiResponse.success(problems, "Problems fetched successfully")
+);
+    }catch(err){
+        next(err);
+    }
 }
 
 const getProblemByID = async(req,res,next)=>{
+    const{id} = req.params;
+    try{
+        const problem = await db.problem.findUnique({
+            where:{
+                id
+            }
+        })
+        if(!problem){
+            throw new NotFoundError("Problem not found");
+        }
 
+        return res.status(200).json(ApiResponse.success(problem,"Problem fetched successfully"));
+    } catch(err){
+        next(err);
+    }
 }
 
 const updateProblem =async(req,res,next)=>{
@@ -94,7 +115,21 @@ const updateProblem =async(req,res,next)=>{
 }
 
 const deleteProblem = async(req,res,next)=>{
-
+    const {id} = req.params;
+    try{
+        const problem = await db.problem.findUnique({
+            where:{id}
+        });
+        if(!problem){
+            throw new NotFoundError("Cannot find problem. Invalid ID");
+        }
+        await db.delete({
+            where:{id}
+        });
+        return res.status(200).json(ApiResponse.success(null,"Deleted Problem Successfully"));
+    } catch(err){
+        next(err);
+    }
 }
 
 const getAllProblemsByUser = async(req,res,next)=>{
