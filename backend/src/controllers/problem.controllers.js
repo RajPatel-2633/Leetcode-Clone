@@ -133,7 +133,29 @@ const deleteProblem = async(req,res,next)=>{
 }
 
 const getAllProblemsByUser = async(req,res,next)=>{
+    try{
+        const problems = await db.problem.findMany({
+            where:{
+                solvedBy:{
+                    some:{
+                        userId: req.user.id
+                    }
+                }
+            },
+            include:{
+                solvedBy:{
+                    where:{
+                        userId:req.user.id
+                    }
+                }
 
+            }
+        })
+
+        return  res.status(200).json(ApiResponse.success(problems,"All the problems for user fetched successfully"));
+    } catch(err){
+        next(err);
+    }
 }
 
 export {createProblem,getAllProblems,getProblemByID,updateProblem,deleteProblem,getAllProblemsByUser};
