@@ -1,10 +1,11 @@
 import { db } from "../libs/db.libs.js";
-import { pollBatchResults, submitBatch } from "../libs/judge0.lib.js";
+import { getLanguageName, pollBatchResults, submitBatch } from "../libs/judge0.lib.js";
 import { BadRequestError, InternalServerError } from "../utils/ApiError.utils.js";
 import { ApiResponse } from "../utils/ApiReponse.utils.js";
 
 const executeCode = async(req,res,next)=>{
     try{
+        const userId = req.user?.id;
         const {source_code,language_id,stdin,expected_outputs,problemId} = req.body;
         if(!source_code || !language_id || !stdin || !expected_outputs || !problemId){
             throw new BadRequestError("All Fields are required");
@@ -51,20 +52,25 @@ const executeCode = async(req,res,next)=>{
         });
 
         // console.log(detailedResults);
+        console.log("problemId:", problemId);
 
         const submission = await db.submission.create({
             data:{
                 userId,
                 problemId,
                 sourceCode:source_code,
-                language_id:getLanguage(language_id),
+                language:getLanguageName(language_id),
                 stdin:stdin.join("\n"),
                 stdout:JSON.stringify(detailedResults.map((r)=>r.stdout)),
-                stderr:detailedResults.some((r)=> r.stderr? JSON.stringify(detailedResults.map((r)=>r.stderr)):null),
-                compileOutput:detailedResults.some((r)=>r.compile_output? JSON.stringify(detailedResults.map((r)=>r.compile_output)):null),
+                stderr:detailedResults.some(r => r.stderr)
+                                    ? JSON.stringify(detailedResults.map(r => r.stderr))
+                                    : null,
+                compileOutput:detailedResults.some(r => r.compile_output)
+                                    ? JSON.stringify(detailedResults.map(r => r.compile_output))
+                                    : null,
                 status:allPassed?"Accepted":"Wrong Answer",
-                memory: detailedResults.some((r)=> r.memory?JSON.stringify(detailedResults.map((r)=>r.memory)):null),
-                time:detailedResults.some((r)=> r.time?JSON.stringify(detailedResults.map((r)=>r.time)):null)
+                memory: detailedResults.some(r=> r.memory)? JSON.stringify(detailedResults.map(r=>r.memory)):null,
+                time:detailedResults.some(r=> r.time)?JSON.stringify(detailedResults.map(r=>r.time)):null
             }
         });
 
@@ -75,7 +81,8 @@ const executeCode = async(req,res,next)=>{
                 where:{
                     userId_problemId:{
                         userId,problemId
-                    },
+                    }
+                },
                     update:{
 
                     },
@@ -83,21 +90,21 @@ const executeCode = async(req,res,next)=>{
                         userId,problemId
                     }
                 }
-            })
+            )
         }
+        // Dont forget to add Status in each test case as well as in Model
 
         // Now we want to save all the individual test case results using detailed result
         const testCaseResults = detailedResults.map((result)=>({
             submissionId:submission.id,
             testCase:result.testCase,
             passed:result.passed,
-            stdout:result.stdout,
+            stdout:result.stdout ?? null,
             expected:result.expected,
-            stderr:result.stderr,
-            compileOutput:result.compileOutput,
-            status:result.status,
-            memory:result.memory,
-            time:result.time
+            stderr:result.stderr ?? null,
+            compileOutput:result.compileOutput ?? null,
+            memory:result.memory ?? null,
+            time:result.time ?? null
         }));
 
         await db.testCaseResult.createMany({
@@ -119,6 +126,8 @@ const executeCode = async(req,res,next)=>{
     } catch(err){
         next(err);
     }
-}
+};
+
+
 
 export {executeCode};
