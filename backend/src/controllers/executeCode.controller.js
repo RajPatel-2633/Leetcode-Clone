@@ -50,7 +50,7 @@ const executeCode = async(req,res,next)=>{
             }
         });
 
-        console.log(detailedResults);
+        // console.log(detailedResults);
 
         const submission = await db.submission.create({
             data:{
@@ -68,12 +68,54 @@ const executeCode = async(req,res,next)=>{
             }
         });
 
-        
+        // Now if all the testcases pass then mark the problem solved for current user
+
+        if(allPassed){
+            await db.problemSolved.upsert({
+                where:{
+                    userId_problemId:{
+                        userId,problemId
+                    },
+                    update:{
+
+                    },
+                    create:{
+                        userId,problemId
+                    }
+                }
+            })
+        }
+
+        // Now we want to save all the individual test case results using detailed result
+        const testCaseResults = detailedResults.map((result)=>({
+            submissionId:submission.id,
+            testCase:result.testCase,
+            passed:result.passed,
+            stdout:result.stdout,
+            expected:result.expected,
+            stderr:result.stderr,
+            compileOutput:result.compileOutput,
+            status:result.status,
+            memory:result.memory,
+            time:result.time
+        }));
+
+        await db.testCaseResult.createMany({
+            data:testCaseResults
+        });
 
 
+        const submissionWithTestCase = await db.submission.findUnique({
+            where:{
+                id:submission.id,
+            },
+            include:{
+                testCases:true
+            }
+        });
 
 
-        return res.status(200).json(ApiResponse.success(null,"Code executed successfully"));
+        return res.status(200).json(ApiResponse.success(submissionWithTestCase,"Code executed successfully"));
     } catch(err){
         next(err);
     }
