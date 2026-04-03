@@ -1,5 +1,6 @@
 import express from "express";
-import { authMiddleware } from "../middleware/auth.middleware";
+import { authMiddleware } from "../middleware/auth.middleware.js";
+import {getAllListDetails,getPlayListDetails,createPlaylist,addProblemtoPlaylist,deletePlaylist,removeProblemFromPlaylist} from "../controllers/playList.controller.js"
 
 const router = express.Router();
 

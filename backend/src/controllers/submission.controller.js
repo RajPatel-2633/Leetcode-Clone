@@ -17,7 +17,7 @@ const getAllSubmissions = async(req,res,next)=>{
 
 const getSubmissions = async(req,res,next)=>{
     try{
-        const problemId = req.params;
+        const {problemId} = req.params;
         const userId = req.user.id;
 
         const submissions = await db.submission.findMany({
@@ -36,7 +36,7 @@ const getSubmissions = async(req,res,next)=>{
 
 const getAlltheSubmissionsforProblem = async(req,res,next)=>{
     try{
-        const problemId = req.params;
+        const {problemId} = req.params;
         const submission = await db.submission.count({
             where:{
                 problemId:problemId
