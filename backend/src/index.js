@@ -14,7 +14,7 @@ dotenv.config({});
 const PORT = process.env.PORT || 8080 ;
 
 app.use(cors({
-    origin:process.env.BASE_URL,
+    origin:"http://localhost:5173",
     methods:["GET","POST","PUT","PATCH","DELETE"],
     allowedHeaders:["Content-Type","Cookie"],
     exposedHeaders: ["Set-Cookie"],
@@ -28,7 +28,7 @@ app.use("/api/v1/auth",authRoutes);
 app.use("/api/v1/problems",problemRoutes);
 app.use("/api/v1/execute-code",executeCodeRoutes);
 app.use("/api/v1/submission",submissionRoutes);
-app.use("/api/v1/playlist",playlistRoutes);
+app.use("/api/v1/playlist",playListRoutes);
 
 app.use(errorHandler);
 app.listen(PORT,()=>{
