@@ -8,7 +8,7 @@ router.post("/register",registerUser);
 
 router.post("/login",loginUser);
 
-router.get("/check",authMiddleware,checkUser);
+router.get("/check",checkUser);
 
 router.post("/logout",authMiddleware,logOut);
 

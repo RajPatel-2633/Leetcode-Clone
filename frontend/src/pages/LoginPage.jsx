@@ -1,7 +1,7 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod"
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {Code,Eye,EyeOff,Loader2,Lock,Mail} from "lucide-react";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { useAuthStore } from '../store/useAuthStore.js';
@@ -16,7 +16,8 @@ const loginSchema = z.object({
 
 const LoginPage = () => {
 
-    const {isLoggingIn,login} = useAuthStore();
+    const {isLoggingIn,login, authUser} = useAuthStore();
+    const navigate = useNavigate();
     const [showPassword,setShowPassword] = useState(false);
     
     const {
@@ -24,6 +25,12 @@ const LoginPage = () => {
         handleSubmit,
         formState:{errors},
     } = useForm({resolver:zodResolver(loginSchema)});
+
+    useEffect(() => {
+      if(authUser){
+        navigate("/");
+      }
+    }, [authUser, navigate]);
 
     const onSubmit = async(data)=>{
 
@@ -123,7 +130,7 @@ const LoginPage = () => {
                 Loading...
               </>
             ): (
-              "Sign In"
+              "Log In"
             )}
             </button>
           </form>

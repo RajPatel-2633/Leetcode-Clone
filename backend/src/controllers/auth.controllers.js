@@ -53,6 +53,12 @@ const loginUser = async(req,res,next)=>{
         if(!user){
             throw new NotFoundError("User not Found");
         }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if(!isPasswordValid){
+            throw new UnauthorizedError("Invalid password");
+        }
+
         const token = jwt.sign({
             id:user.id,
             role:user.role
@@ -77,7 +83,25 @@ const loginUser = async(req,res,next)=>{
 
 const checkUser = async(req,res,next)=>{
     try{
-        return res.status(200).json(ApiResponse.success( {user:req.user},"User Checked Successfully"))
+        const token = req.cookies?.jwt || req.headers.authorization?.split(" ")[1];
+        
+        if(!token){
+            return res.status(200).json(ApiResponse.success( {user:null},"User not authenticated"))
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await db.user.findUnique({
+            where: { id: decoded.id },
+            select: {
+                id: true,
+                image: true,
+                name: true,
+                email: true,
+                role: true,
+            },
+        });
+
+        return res.status(200).json(ApiResponse.success( {user},"User Checked Successfully"))
     } catch(err){
         next(err);
     }
