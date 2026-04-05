@@ -1,4 +1,6 @@
 import axios from "axios"
+
+
 export const getJudge0LanguageId = (language)=>{
     const languageMap = {
         "PYTHON":71,
@@ -18,6 +20,25 @@ export const submitBatch = async(submissions) =>{
     console.log("Submission Results: ",data);
     return data; // This would be in the form of tokens; [{token},{token},{token}]
     }
+
+export async function getJudge0Result(token) {
+    let result;
+    while (true) {
+        const response = await axios.get(`${process.env.JUDGE0_API_URL}/submissions/${token}`);
+        result = response.data;
+        if (result.status.id !== 1 && result.status.id !== 2) break;
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    return result;
+}
+
+export function chunkArray(arr, size = 20) {
+  const result = [];
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  return result;
+}
 
 const sleep = (ms)=>new Promise((resolve)=> setTimeout(resolve,ms));
 

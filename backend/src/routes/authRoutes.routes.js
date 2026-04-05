@@ -1,5 +1,5 @@
 import express from "express"
-import { registerUser,loginUser,checkUser,logOut} from "../controllers/auth.controllers.js";
+import { registerUser,loginUser,checkUser,logOut, getSubmissions, getUserPlaylists} from "../controllers/auth.controllers.js";
 import { authMiddleware } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
@@ -11,6 +11,10 @@ router.post("/login",loginUser);
 router.get("/check",checkUser);
 
 router.post("/logout",authMiddleware,logOut);
+
+router.get("/get-submissions",authMiddleware , getSubmissions);
+
+router.get("/get-playlists" , authMiddleware , getUserPlaylists);
 
 
 

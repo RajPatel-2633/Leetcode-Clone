@@ -123,4 +123,44 @@ const logOut = async(req,res,next)=>{
     }
 }
 
-export {registerUser,loginUser,checkUser,logOut};
+const getSubmissions = async (req, res,next) => {
+  try {
+    const submissions = await db.submission.findMany({
+      where: {
+        userId: req.user.id,
+      },
+    });
+    return res.status(200).json(
+      ApiResponse.success(submissions, "Submissions fetched successfully")
+    );
+  } catch (error) {
+    console.error("Fetch Submissions Error:", error);
+    next(error);
+  }
+};
+
+
+ const getUserPlaylists = async (req, res, next) => {
+  try {
+    const playLists = await db.playlist.findMany({
+      where: {
+        userId: req.user.id,
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        createdAt: true,
+      },
+    });
+
+     return res.status(200).json(
+      ApiResponse.success(playLists, "Playlists fetched successfully")
+    );
+  } catch (error) {
+    console.error("Fetch Playlists Error:", error);
+    next(error);
+  }
+ };
+
+export {registerUser,loginUser,checkUser,logOut,getSubmissions,getUserPlaylists};

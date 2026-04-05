@@ -110,9 +110,89 @@ const getProblemByID = async(req,res,next)=>{
     }
 }
 
-const updateProblem =async(req,res,next)=>{
+const updateProblem = async (req, res, next) => {
+  try {
+    const { id } = req.params;
 
-}
+    const {
+      title,
+      description,
+      difficulty,
+      tags,
+      examples,
+      constraints,
+      testCases,
+      codeSnippets,
+      referenceSolutions,
+    } = req.body;
+
+    const problem = await db.problem.findUnique({ where: { id } });
+
+    if (!problem) {
+      throw new NotFoundError("Problem not found");
+    }
+
+    if (req.user.role.trim().toLowerCase() !== "admin") {
+      throw new UnauthorizedError("Access denied. Admins only");
+    }
+
+    if (referenceSolutions) {
+      for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
+
+        const languageId = getJudge0LanguageId(language);
+
+        if (!languageId) {
+          throw new NotFoundError(`Unsupported language: ${language}`);
+        }
+
+        const submissions = testCases.map(({ input, output }) => ({
+          source_code: solutionCode,
+          language_id: languageId,
+          stdin: input,
+          expected_output: output,
+        }));
+
+        const submissionResults = await submitBatch(submissions);
+        const tokens = submissionResults.map((res) => res.token);
+
+        const results = await pollBatchResults(tokens);
+
+        for (let i = 0; i < results.length; i++) {
+          const result = results[i];
+
+          if (result.status.id !== 3) {
+            throw new InternalServerError(
+              `Testcase ${i + 1} failed for ${language}`
+            );
+          }
+        }
+      }
+    }
+
+    const updatedProblem = await db.problem.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        difficulty,
+        tags,
+        examples,
+        constraints,
+        testCases,
+        codeSnippets,
+        referenceSolutions,
+      },
+    });
+
+    return res.status(200).json(
+      ApiResponse.success(updatedProblem, "Problem updated successfully")
+    );
+
+  } catch (error) {
+    console.error("Update Problem Error:", error);
+    next(error);
+  }
+};
 
 const deleteProblem = async(req,res,next)=>{
     const {id} = req.params;
