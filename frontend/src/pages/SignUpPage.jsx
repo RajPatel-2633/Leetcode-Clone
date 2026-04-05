@@ -1,50 +1,53 @@
-import React,{useState, useEffect} from 'react'
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {Link, useNavigate} from "react-router-dom"
-import {Code,Eye,EyeOff,Loader2,Lock,Mail} from "lucide-react";
-import AuthImagePattern from "../components/AuthImagePattern.jsx";
-import { useAuthStore } from '../store/useAuthStore.js';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import AuthImagePattern from "../components/AuthImagePattern";
+import { Link } from "react-router-dom";
+import {
+  Code,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+} from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
-import {z} from "zod";
-
-const signUpSchema = z.object({
-    email:z.string().email("Enter a valid email"),
-    password:z.string().min(6,"Password must be atleast of 6 characters"),
-    name:z.string().min(3,"Name must be atleast 3 characters")
+const SignUpSchema = z.object({
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z.string().min(3, "Name must be at least 3 characters"),
 });
 
 
 
 const SignUpPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
 
-    const [showPassword,setShowPassword] = useState(false);
-    const navigate = useNavigate();
-    const {signup, isSigningUp, authUser} = useAuthStore();
-    const {
-        register,
-        handleSubmit,
-        formState:{errors},
-    } = useForm({resolver:zodResolver(signUpSchema)});
+  const {signup , isSigninUp} = useAuthStore();
 
-    useEffect(() => {
-      if(authUser){
-        navigate("/");
-      }
-    }, [authUser, navigate]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(SignUpSchema),
+  });
 
-    const onSubmit = async(data)=>{
-        try{
-          await signup(data);
-          console.log("Sign up Data",data);
-        } catch(err){
-          console.log("Sign Up Failed",err);
-        }
-    }
+  const onSubmit = async (data) => {
+   
+    try {
+      await signup(data); // your auth logic here
+      console.log("SignUp Data:", data);
+    } catch (error) {
+      console.error("SignUp failed:", error);
+    } 
+  };
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
-       {/* Left Side - Form */}
+      {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
@@ -145,10 +148,9 @@ const SignUpPage = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={isSigningUp}
-            
+              disabled={isSigninUp}
             >
-            {isSigningUp ? (
+              {isSigninUp ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
                   Loading...
@@ -171,14 +173,15 @@ const SignUpPage = () => {
         </div>
       </div>
 
+      {/* Right Side - Image/Pattern */}
       <AuthImagePattern
-        title={"Welcome to our Platform!"}
+        title={"Welcome to our platform!"}
         subtitle={
-            "Sign Up to access our platform and start using our services."
+          "Sign up to access our platform and start using our services."
         }
       />
     </div>
-  )
-}
+  );
+};
 
-export default SignUpPage
+export default SignUpPage;

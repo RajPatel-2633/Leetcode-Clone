@@ -1,15 +1,15 @@
 import React from "react";
-import {User, Code, LogOut} from "lucide-react";
-import { useAuthStore } from "../store/useAuthStore.js";
-import {Link} from "react-router-dom";
-import LogoutButton from "./LogoutButton.jsx";
+import { User, Code, LogOut } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
+import LogoutButton from "./LogoutButton";
+import { Link } from "react-router-dom";
 
+const Navbar = () => {
 
-const Navbar = ()=>{
-    const {authUser} = useAuthStore();
+  const { authUser } = useAuthStore();
 
-    return(
-       <nav className="sticky top-0 z-50 w-full py-5">
+  return (
+    <nav className="sticky top-0 z-50 w-full py-5">
       <div className="flex w-full justify-between mx-auto max-w-4xl bg-black/15 shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-4 rounded-2xl">
         {/* Logo Section */}
         <Link to="/" className="flex items-center gap-3 cursor-pointer">
@@ -82,8 +82,7 @@ const Navbar = ()=>{
         </div>
       </div>
     </nav>
-    );
+  );
 };
 
 export default Navbar;
-

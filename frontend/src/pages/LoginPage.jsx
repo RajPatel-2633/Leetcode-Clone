@@ -1,49 +1,51 @@
-import React,{useState, useEffect} from 'react'
-import {useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod"
-import {Link, useNavigate} from "react-router-dom"
-import {Code,Eye,EyeOff,Loader2,Lock,Mail} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import AuthImagePattern from "../components/AuthImagePattern";
-import { useAuthStore } from '../store/useAuthStore.js';
-import {z} from "zod";
+import { Link } from "react-router-dom";
+import {
+  Code,
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+} from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const loginSchema = z.object({
-    email:z.string().email("Enter a valid email"),
-    password:z.string().min(6,"Password must be atleast of 6 characters"),
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 
 
 const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
+ 
+  const { login, isLoggingIn } = useAuthStore();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+  });
 
-    const {isLoggingIn,login, authUser} = useAuthStore();
-    const navigate = useNavigate();
-    const [showPassword,setShowPassword] = useState(false);
-    
-    const {
-        register,
-        handleSubmit,
-        formState:{errors},
-    } = useForm({resolver:zodResolver(loginSchema)});
-
-    useEffect(() => {
-      if(authUser){
-        navigate("/");
-      }
-    }, [authUser, navigate]);
-
-    const onSubmit = async(data)=>{
-
-      try{
-        await login(data);
-      } catch(err){
-        console.log("Login Failed ",err);
-      }
-    }
+  const onSubmit = async (data) => {
+ 
+    try {
+      await login(data); // your auth logic here
+      console.log("Login Data:", data);
+    } catch (error) {
+      console.error("Login failed:", error);
+    } 
+  };
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
-       {/* Left Side - Form */}
+      {/* Left Side - Form */}
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
@@ -53,14 +55,12 @@ const LoginPage = () => {
                 <Code className="w-6 h-6 text-primary" />
               </div>
               <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-              <p className="text-base-content/60">Log in to your account</p>
+              <p className="text-base-content/60">Sign in to your account</p>
             </div>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            
-
             {/* Email */}
             <div className="form-control">
               <label className="label">
@@ -124,37 +124,38 @@ const LoginPage = () => {
               className="btn btn-primary w-full"
               disabled={isLoggingIn}
             >
-            {isLoggingIn ? (
-              <>
-                <Loader2 className='h-5 w-5 animate-spin'/>
-                Loading...
-              </>
-            ): (
-              "Log In"
-            )}
+              {isLoggingIn ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Sign in"
+              )}
             </button>
           </form>
 
           {/* Footer */}
           <div className="text-center">
             <p className="text-base-content/60">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link to="/signup" className="link link-primary">
-                Sign Up
+                Create account
               </Link>
             </p>
           </div>
         </div>
       </div>
 
+      {/* Right Side - Image/Pattern */}
       <AuthImagePattern
-        title={"Welcome Back!"}
+        title={"Welcome back!"}
         subtitle={
-            "Sign in  to continue your journey with us. Don't have an account? Create new one."
+          "Sign in to continue your journey with us. Don't have an account? Create one now."
         }
       />
     </div>
-  )
-}
+  );
+};
 
-export default LoginPage
+export default LoginPage;

@@ -1,34 +1,33 @@
-import {create} from "zustand";
-import { axiosInstance } from "../lib/axios.js";
-import { Trophy } from "lucide-react";
-import toast from "react-hot-toast"
+import { create } from "zustand";
+import { axiosInstance } from "../libs/axios.js";
+import toast from "react-hot-toast";
 
 
-export const useAuthStore = create((set)=>({
-   authUser:null,
-   isSigningUp:false,
-   isLoggingIn:false,
-   isCheckingAuth:false,
-
-
-   checkAuth:async()=>{
-        set({isCheckingAuth : true});
-        try{
-            const res = await axiosInstance.get("/auth/check");
-            console.log("Check Auth Response",res.data);
-
-            set({authUser:res.data.user})
-        } catch(err){
-            console.log("Error checking auth:",err);
-            set({authUser:null})
-        } finally{
-            set({isCheckingAuth:false});
+export const useAuthStore = create((set , get)=>({
+    authUser: null,
+    isSigninUp: false,
+    isLoggingIn: false,
+    isCheckingAuth: false,
+  
+    checkAuth: async () => {
+        set({ isCheckingAuth: true }); 
+      
+        try {
+          const res = await axiosInstance.get("/auth/check");
+          console.log("✅ checkAuth response:", res.data);
+          set({ authUser: res.data.user });
+        } catch (error) {
+          console.log("❌ Error checking auth:", error);
+          set({ authUser: null });
+        } finally {
+          set({ isCheckingAuth: false });
         }
-   }
-   ,
+      }
+,      
+    
 
-   signup:async(data)=>{
-        set({isSigningUp:true});
+    signup:async(data)=>{
+        set({isSigninUp:true});
         try {
             const res = await axiosInstance.post("/auth/register" , data);
 
@@ -40,19 +39,16 @@ export const useAuthStore = create((set)=>({
             toast.error("Error signing up");
         }
         finally{
-            set({isSigningUp:false});
+            set({isSigninUp:false});
         }
-    }
-    ,
+    },
 
     login:async(data)=>{
         set({isLoggingIn:true});
         try {
             const res = await axiosInstance.post("/auth/login" , data);
-            // console.log("In Login ")
-            // console.log(res.data);
 
-            set({authUser:res.data.data});
+            set({authUser:res.data.user});
             
             toast.success(res.data.message);
             
@@ -63,10 +59,9 @@ export const useAuthStore = create((set)=>({
         finally{
             set({isLoggingIn:false});
         }
-    }
-    ,
+    },
 
-     logout:async()=>{
+    logout:async()=>{
         try {
             await axiosInstance.post("/auth/logout");
             set({authUser:null});
@@ -78,4 +73,5 @@ export const useAuthStore = create((set)=>({
         }
     }
 
-}));
+
+}))
