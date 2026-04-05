@@ -20,14 +20,14 @@ const Navbar = () => {
         </Link>
 
         {/* User Profile and Dropdown */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4">
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar flex flex-row ">
               <div className="w-10 rounded-full ">
                 <img
                   src={
                     authUser?.image ||
-                    "https://avatar.iran.liara.run/public/boy"
+                    "https://api.dicebear.com/7.x/avataaars/svg?seed=LeetLab"
                   }
                   alt="User Avatar"
                   className="object-cover"

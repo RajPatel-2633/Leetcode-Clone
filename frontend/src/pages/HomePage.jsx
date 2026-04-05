@@ -11,7 +11,7 @@ const HomePage = () => {
     getAllProblems();
   }, [getAllProblems]);
 
-  console.log(problems);
+  console.log("HomePage rendering, problems:", problems);
 
   if (isProblemsLoading) {
     return (
@@ -31,13 +31,15 @@ const HomePage = () => {
         A Platform Inspired by Leetcode which helps you to prepare for coding interviews and helps you to improve your coding skills by solving coding problems
       </p>
 
-    {
-      problems.length > 0 ? <ProblemsTable problems={problems} /> : (
-        <p className="mt-10 text-center text-lg font-semibold text-gray-500 dark:text-gray-400 z-10 border border-primary px-4 py-2 rounded-md border-dashed">
-          No problems found
-        </p>
-      )
-    }
+      <div className="w-full max-w-7xl mt-10">
+        {
+          problems && problems.length > 0 ? <ProblemsTable problems={problems} /> : (
+            <p className="mt-10 text-center text-lg font-semibold text-gray-500 dark:text-gray-400 z-10 border border-primary px-4 py-2 rounded-md border-dashed">
+              No problems found
+            </p>
+          )
+        }
+      </div>
     </section>
   );
 };

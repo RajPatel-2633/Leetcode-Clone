@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { Bookmark, PencilIcon, Trash, TrashIcon, Plus } from "lucide-react";
-import { useActions } from "../store/useActions";
+import { Bookmark, Trash, TrashIcon, Plus } from "lucide-react";
+import { useActions } from "../store/useAction";
 import AddToPlaylistModal from "./AddToPlaylist";
 import CreatePlaylistModal from "./CreatePlaylistModal";
 import { usePlaylistStore } from "../store/usePlaylistStore";
@@ -61,11 +61,6 @@ const ProblemsTable = ({ problems }) => {
 
   const handleCreatePlaylist = async (data) => {
     await createPlaylist(data);
-  };
-
-  const handleAddToPlaylist = (problemId) => {
-    setSelectedProblemId(problemId);
-    setIsAddToPlaylistModalOpen(true);
   };
 
   return (
@@ -132,9 +127,9 @@ const ProblemsTable = ({ problems }) => {
           <tbody>
             {paginatedProblems.length > 0 ? (
               paginatedProblems.map((problem) => {
-                const isSolved = problem.solvedBy.some(
-                  (user) => user.userId === authUser?.id
-                );
+                const isSolved = problem.solvedby?.some(
+                  (ps) => ps.userId === authUser?.id
+                ) || false;
                 return (
                   <tr key={problem.id}>
                     <td>
@@ -184,9 +179,6 @@ const ProblemsTable = ({ problems }) => {
                               className="btn btn-sm btn-error"
                             >
                               <TrashIcon className="w-4 h-4 text-white" />
-                            </button>
-                            <button disabled className="btn btn-sm btn-warning">
-                              <PencilIcon className="w-4 h-4 text-white" />
                             </button>
                           </div>
                         )}

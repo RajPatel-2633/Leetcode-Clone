@@ -1,6 +1,6 @@
 import express from "express";
 import { authMiddleware, checkAdmin } from "../middleware/auth.middleware.js";
-import {createProblem,getAllProblems,getProblemByID,updateProblem,deleteProblem,getAllProblemsByUser} from "../controllers/problem.controllers.js"
+import {createProblem,getAllProblems,getProblemByID,deleteProblem,getAllProblemsByUser} from "../controllers/problem.controllers.js"
 
 const router = express.Router();
 
@@ -9,8 +9,6 @@ router.post('/create-problem',authMiddleware,checkAdmin,createProblem);
 router.get('/get-all-problems',authMiddleware,getAllProblems);
 
 router.get('/get-problem/:id',authMiddleware,getProblemByID);
-
-router.put('/update-problem/:id',authMiddleware,checkAdmin,updateProblem);
 
 router.delete('/delete-problem/:id',authMiddleware,checkAdmin,deleteProblem);
 

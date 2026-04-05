@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { axiosInstance } from "../libs/axios.js";
+import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
 
 export const useSubmissionStore = create((set, get) => ({
@@ -11,9 +11,9 @@ export const useSubmissionStore = create((set, get) => ({
   getAllSubmissions: async () => {
     try {
       set({ isLoading: true });
-      const res = await axiosInstance.get("/submissions/get-all-submissions");
+      const res = await axiosInstance.get("/submission/get-all-submissions");
 
-      set({ submissions: res.data.submissions });
+      set({ submissions: res.data.data });
 
       toast.success(res.data.message);
     } catch (error) {
@@ -27,10 +27,10 @@ export const useSubmissionStore = create((set, get) => ({
   getSubmissionForProblem: async (problemId) => {
     try {
       const res = await axiosInstance.get(
-        `/submissions/get-submissions/${problemId}`
+        `/submission/get-submission/${problemId}`
       );
 
-      set({ submission: res.data.submissions });
+      set({ submission: res.data.data });
 
       
 
@@ -47,10 +47,10 @@ export const useSubmissionStore = create((set, get) => ({
   getSubmissionCountForProblem: async (problemId) => {
     try {
       const res = await axiosInstance.get(
-        `/submissions/get-submissions-count/${problemId}`
+        `/submission/get-submission-count/${problemId}`
       );                
 
-      set({ submissionCount: res.data.count });
+      set({ submissionCount: res.data.data.count });
     } catch (error) {
       console.log("Error getting submission count for problem", error);
       toast.error("Error getting submission count for problem");

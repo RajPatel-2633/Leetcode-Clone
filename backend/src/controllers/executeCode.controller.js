@@ -25,13 +25,13 @@ const executeCode = async(req,res,next)=>{
         // console.log("Result----");
         // console.log(results);
 
-
         let allPassed = true;
         const detailedResults = results.map((result,i)=>{
             const stdout = result.stdout?.trim();
             const expected_output = expected_outputs[i]?.trim();
 
             const passed = stdout === expected_output;
+            if (!passed) allPassed = false;
             // console.log(`TestCase #${i+1}`);
             // console.log(`Input ${stdin[i]}`);
             // console.log(`Expected Output for test case #${i+1} is ${expected_output}`)
@@ -43,8 +43,6 @@ const executeCode = async(req,res,next)=>{
                 passed,
                 stdout,
                 expected:expected_output,
-                stderr:result.stderr || null,
-                compile_output: result.compile_output || null,
                 status:result.status.description,
                 memory:result.memory?`${result.memory}KB`:undefined,
                 time:result.time?`${result.time}s`:undefined
@@ -62,12 +60,6 @@ const executeCode = async(req,res,next)=>{
                 language:getLanguageName(language_id),
                 stdin:stdin.join("\n"),
                 stdout:JSON.stringify(detailedResults.map((r)=>r.stdout)),
-                stderr:detailedResults.some(r => r.stderr)
-                                    ? JSON.stringify(detailedResults.map(r => r.stderr))
-                                    : null,
-                compileOutput:detailedResults.some(r => r.compile_output)
-                                    ? JSON.stringify(detailedResults.map(r => r.compile_output))
-                                    : null,
                 status:allPassed?"Accepted":"Wrong Answer",
                 memory: detailedResults.some(r=> r.memory)? JSON.stringify(detailedResults.map(r=>r.memory)):null,
                 time:detailedResults.some(r=> r.time)?JSON.stringify(detailedResults.map(r=>r.time)):null
@@ -101,8 +93,6 @@ const executeCode = async(req,res,next)=>{
             passed:result.passed,
             stdout:result.stdout ?? null,
             expected:result.expected,
-            stderr:result.stderr ?? null,
-            compileOutput:result.compileOutput ?? null,
             memory:result.memory ?? null,
             time:result.time ?? null
         }));

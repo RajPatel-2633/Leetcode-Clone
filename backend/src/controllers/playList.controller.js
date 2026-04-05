@@ -8,7 +8,8 @@ const getAllListDetails  = async(req,res,next)=>{
         const playlists = await db.playlist.findMany({
             where:{
                 userId:req.user.id
-            },includes:{
+            },
+            include:{
                 problems:{
                     include:{
                         problem:true
@@ -52,17 +53,24 @@ const getPlayListDetails = async(req,res,next)=>{
 const createPlaylist = async(req,res,next)=>{
     try{
         const {name,description} = req.body;
+        if (!name || name.trim() === '') {
+            throw new BadRequestError("Playlist name is required");
+        }
         const userId = req.user.id;
         const playlist = await db.playlist.create({
             data:{
-                name,
-                description,
+                name: name.trim(),
+                description: description?.trim() || null,
                 userId
             }
         });
 
-        return res.status(201).json(ApiResponse.create(playlist,"Playlist Created Successfully"));
+        return res.status(201).json(ApiResponse.created(playlist,"Playlist Created Successfully"));
     } catch(err){
+        if (err.code === 'P2002') {
+            // Unique constraint violation
+            return next(new BadRequestError("A playlist with this name already exists"));
+        }
         next(err);
     }
 };
@@ -78,12 +86,12 @@ const addProblemtoPlaylist = async(req,res,next)=>{
         // Create Record for Each Problem in the Playlist;
          const problemsinPlaylist = await db.probleminPlaylist.createMany({
             data:problemIds.map((problemId)=>({
-                playlistId,
+                playListId: playlistId,
                 problemId
             }))
          });
 
-         return res.status(201).json(ApiResponse.created(problemsinPlaylist,"Playlist Created Successully"));
+         return res.status(201).json(ApiResponse.created(problemsinPlaylist,"Problems added to playlist successfully"));
 
     } catch(err){
         next(err);
@@ -95,11 +103,12 @@ const deletePlaylist = async(req,res,next)=>{
         const {playlistId} = req.params;
         const deletedPlaylist = await db.playlist.delete({
             where:{
-                id:playlistId
+                id: playlistId,
+                userId: req.user.id
             }
         });
 
-        return res.status(200).json(ApiResponse.success(deletePlaylist,"Playlist Deleted Successfully"));
+        return res.status(200).json(ApiResponse.success(deletedPlaylist,"Playlist Deleted Successfully"));
     } catch(err){
         next(err);
     }
@@ -114,7 +123,7 @@ const removeProblemFromPlaylist = async(req,res,next)=>{
         }
         const deletedProblem = await db.probleminPlaylist.deleteMany({
             where:{
-                playlistId,
+                playListId: playlistId,
                 problemId:{
                     in:problemIds
                 }

@@ -1,4 +1,4 @@
-import { BadRequestError, ConflictError, InternalServerError, NotFoundError } from "../utils/ApiError.utils.js";
+import { BadRequestError, ConflictError, InternalServerError, NotFoundError, UnauthorizedError } from "../utils/ApiError.utils.js";
 import { db } from "../libs/db.libs.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -32,7 +32,22 @@ const registerUser = async(req,res,next)=>{
         if(!newUser){
             throw new InternalServerError("Some error occured while creating User");
         }
-        return res.status(201).json(ApiResponse.created( { id: newUser.id, email: newUser.email, name: newUser.name },"User created Successfully"));
+
+        const token = jwt.sign({
+            id:newUser.id,
+            role:newUser.role
+        },process.env.JWT_SECRET,{
+            expiresIn:"7d"
+        });
+
+        res.cookie("jwt",token,{
+            httpOnly:true,
+            sameSite:"lax",
+            secure:false,
+            maxAge:1000*60*60*24*7
+        })
+
+        return res.status(201).json(ApiResponse.created( { id: newUser.id, email: newUser.email, name: newUser.name, token },"User created Successfully"));
 
     } catch (err){
             next(err);

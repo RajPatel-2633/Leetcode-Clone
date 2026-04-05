@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthImagePattern from "../components/AuthImagePattern";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Code,
   Eye,
@@ -24,8 +24,8 @@ const SignUpSchema = z.object({
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const {signup , isSigninUp} = useAuthStore();
+  const navigate = useNavigate();
+  const {signup , isSigninUp, authUser} = useAuthStore();
 
   const {
     register,
@@ -34,6 +34,12 @@ const SignUpPage = () => {
   } = useForm({
     resolver: zodResolver(SignUpSchema),
   });
+
+  useEffect(() => {
+    if (authUser) {
+      navigate("/");
+    }
+  }, [authUser, navigate]);
 
   const onSubmit = async (data) => {
    

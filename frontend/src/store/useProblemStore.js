@@ -14,7 +14,8 @@ export const useProblemStore = create((set, get) => ({
       set({ isProblemsLoading: true });
       const res = await axiosInstance.get("/problems/get-all-problems");
 
-      set({ problems: res.data.problems });
+      console.log("getAllProblems response:", res.data);
+      set({ problems: res.data.data });
 
      
     } catch (error) {
@@ -25,12 +26,16 @@ export const useProblemStore = create((set, get) => ({
     }
   },
 
+  refreshProblems: async () => {
+    await get().getAllProblems();
+  },
+
   getProblemById: async (id) => {
     try {
       set({ isProblemLoading: true });
       const res = await axiosInstance.get(`/problems/get-problem/${id}`);
 
-      set({ problem: res.data.problem });
+      set({ problem: res.data.data });
 
       toast.success(res.data.message);
     } catch (error) {
@@ -43,9 +48,9 @@ export const useProblemStore = create((set, get) => ({
 
   getSolvedProblemByUser: async () => {
     try {
-      const res = await axiosInstance.get("/problems/get-solved-problem");
+      const res = await axiosInstance.get("/problems/get-solved-problems");
 
-      set({ solvedProblems: res.data.problems });
+      set({ solvedProblems: res.data.data });
     } catch (error) { 
       console.log("Error getting solved problems", error);
       toast.error("Error getting solved problems");

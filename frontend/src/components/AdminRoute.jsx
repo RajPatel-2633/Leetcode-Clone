@@ -1,5 +1,6 @@
 import React from 'react'
 import { Navigate , Outlet} from 'react-router-dom';
+import { Loader } from 'lucide-react';
 import { useAuthStore } from "../store/useAuthStore.js";
 
 
@@ -13,7 +14,7 @@ const AdminRoute = () => {
     if(!authUser || authUser.role !=="ADMIN"){
         return <Navigate to="/" replace />
     }
-  
+
     return <Outlet/>;
 }
 

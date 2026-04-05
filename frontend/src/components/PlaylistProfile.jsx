@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { usePlaylistStore } from '../store/usePlaylistStore';
 import { Link } from 'react-router-dom';
-import { BookOpen, ChevronDown, ChevronUp, Clock, List, Tag, ExternalLink } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronUp, Clock, List, Tag, ExternalLink, Trash2 } from 'lucide-react';
+import CreatePlaylistModal from './CreatePlaylistModal';
 
 const PlaylistProfile = () => {
-  const { getAllPlaylists, playlists , deletePlaylist } = usePlaylistStore();
+  const { getAllPlaylists, playlists, deletePlaylist, createPlaylist, removeProblemFromPlaylist } = usePlaylistStore();
   const [expandedPlaylist, setExpandedPlaylist] = useState(null);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     getAllPlaylists();

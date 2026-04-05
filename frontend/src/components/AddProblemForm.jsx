@@ -16,6 +16,7 @@ import { useState } from "react";
 import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
 import {Navigate, useNavigate} from "react-router-dom";
+import { useProblemStore } from "../store/useProblemStore";
 
 const problemSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -572,6 +573,11 @@ const navigation = useNavigate();
       
       console.log(res.data);
       toast.success(res.data.message);
+      
+      // Refresh problems list before navigating
+      console.log("Calling refreshProblems");
+      await useProblemStore.getState().refreshProblems();
+      
       navigation("/");
     } catch (error) {
       console.log("Error creating problem", error);

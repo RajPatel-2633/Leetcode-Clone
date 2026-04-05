@@ -17,6 +17,7 @@ import {
   Home,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useProblemStore } from "../store/useProblemStore";
 import { getLanguageId } from "../libs/utils";
 import { useExecutionStore } from "../store/useExecution";
@@ -68,16 +69,27 @@ const ProblemPage = () => {
     setCode(problem.codeSnippets?.[lang] || "");
   };
 
-  const handleRunCode = (e) => {
-    e.preventDefault();
-    try {
-      const language_id = getLanguageId(selectedLanguage);
-      const stdin = problem.testCases.map((tc) => tc.input);
-      const expected_outputs = problem.testCases.map((tc) => tc.output);
-      executeCode(code, language_id, stdin, expected_outputs, id);
-    } catch (error) {
-      console.log("Error executing code", error);
+  const handleRunCode = async () => {
+    if (!code.trim()) {
+      toast.error("Please write some code first");
+      return;
     }
+
+    if (testCases.length === 0) {
+      toast.error("No test cases available");
+      return;
+    }
+
+    const languageId = getLanguageId(selectedLanguage);
+    if (!languageId) {
+      toast.error("Unsupported language");
+      return;
+    }
+
+    const stdin = testCases.map((tc) => tc.input);
+    const expected_outputs = testCases.map((tc) => tc.output);
+
+    await executeCode(code, languageId, stdin, expected_outputs, problem.id);
   };
 
   if (isProblemLoading || !problem) {
