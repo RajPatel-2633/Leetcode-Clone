@@ -92,6 +92,16 @@ const ProblemPage = () => {
     await executeCode(code, languageId, stdin, expected_outputs, problem.id);
   };
 
+  const handleSubmitSolution = async () => {
+    // Reuse the same validation and execution flow as Run Code
+    await handleRunCode();
+    // After a successful run, switch to submissions tab and refresh history
+    setActiveTab("submissions");
+    if (id) {
+      await getSubmissionForProblem(id);
+    }
+  };
+
   if (isProblemLoading || !problem) {
     return (
       <div className="flex items-center justify-center h-screen bg-base-200">
@@ -310,7 +320,11 @@ const ProblemPage = () => {
                     {!isExecuting && <Play className="w-4 h-4" />}
                     Run Code
                   </button>
-                  <button className="btn btn-success gap-2">
+                  <button
+                    className={`btn btn-success gap-2 ${isExecuting ? 'loading' : ''}`}
+                    onClick={handleSubmitSolution}
+                    disabled={isExecuting}
+                  >
                     Submit Solution
                   </button>
                 </div>

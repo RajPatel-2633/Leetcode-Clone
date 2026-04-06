@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   CheckCircle2,
   XCircle,
@@ -8,6 +8,10 @@ import {
 } from "lucide-react";
 
 const SubmissionsList = ({ submissions, isLoading }) => {
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("newest");
+  const [expandedSubmissionId, setExpandedSubmissionId] = useState(null);
+
   // Helper function to safely parse JSON strings
   const safeParse = (data) => {
     try {
@@ -56,9 +60,54 @@ const SubmissionsList = ({ submissions, isLoading }) => {
     );
   }
 
+  // Apply filtering by status
+  const filteredSubmissions = submissions.filter((submission) => {
+    if (statusFilter === "all") return true;
+    return submission.status === statusFilter;
+  });
+
+  // Apply sorting by createdAt
+  const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+  });
+
+  const toggleExpand = (id) => {
+    setExpandedSubmissionId((prev) => (prev === id ? null : id));
+  };
+
   return (
     <div className="space-y-4">
-      {submissions.map((submission) => {
+      {/* Controls */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-3 mb-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-base-content/70">Filter:</span>
+          <select
+            className="select select-sm select-bordered bg-base-200"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="all">All</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Wrong Answer">Wrong Answer</option>
+            <option value="Time Limit Exceeded">Time Limit Exceeded</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-base-content/70">Sort:</span>
+          <select
+            className="select select-sm select-bordered bg-base-200"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
+      </div>
+
+      {sortedSubmissions.map((submission) => {
         const avgMemory = calculateAverageMemory(submission.memory);
         const avgTime = calculateAverageTime(submission.time);
 
@@ -85,7 +134,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                   <div className="badge badge-neutral">{submission.language}</div>
                 </div>
 
-                {/* Right Section: Runtime, Memory, and Date */}
+                {/* Right Section: Runtime, Memory, Date, and Details toggle */}
                 <div className="flex items-center gap-4 text-base-content/70">
                   <div className="flex items-center gap-1">
                     <Clock className="w-4 h-4" />
@@ -101,8 +150,54 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                       {new Date(submission.createdAt).toLocaleDateString()}
                     </span>
                   </div>
+                  <button
+                    type="button"
+                    className="btn btn-xs btn-outline"
+                    onClick={() => toggleExpand(submission.id)}
+                  >
+                    {expandedSubmissionId === submission.id
+                      ? "Hide details"
+                      : "View details"}
+                  </button>
                 </div>
               </div>
+
+              {expandedSubmissionId === submission.id && (
+                <div className="mt-4 border-t border-base-300 pt-4 space-y-3">
+                  <div>
+                    <div className="text-sm font-semibold mb-1">Your code</div>
+                    <div className="mockup-code bg-base-100">
+                      <pre className="p-3 overflow-x-auto">
+                        <code>{submission.sourceCode}</code>
+                      </pre>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <div className="text-sm font-semibold mb-1">Input</div>
+                      <div className="mockup-code bg-base-100">
+                        <pre className="p-3 overflow-x-auto">
+                          <code>{submission.stdin || "No input provided"}</code>
+                        </pre>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold mb-1">
+                        Output (stdout)
+                      </div>
+                      <div className="mockup-code bg-base-100">
+                        <pre className="p-3 overflow-x-auto">
+                          <code>
+                            {Array.isArray(safeParse(submission.stdout))
+                              ? safeParse(submission.stdout).join("")
+                              : submission.stdout || "No output"}
+                          </code>
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
