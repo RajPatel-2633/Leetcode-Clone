@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import AuthImagePattern from "../components/AuthImagePattern";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import {
-  Code,
   Eye,
   EyeOff,
   Loader2,
@@ -19,12 +19,10 @@ const loginSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-
-
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
- 
   const { login, isLoggingIn } = useAuthStore();
+  
   const {
     register,
     handleSubmit,
@@ -34,9 +32,8 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (data) => {
- 
     try {
-      await login(data); // your auth logic here
+      await login(data);
       console.log("Login Data:", data);
     } catch (error) {
       console.error("Login failed:", error);
@@ -44,114 +41,110 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="h-screen grid lg:grid-cols-2">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-[#0a0a0a] text-white">
       {/* Left Side - Form */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="flex flex-col items-center gap-2 group">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Code className="w-6 h-6 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-              <p className="text-base-content/60">Sign in to your account</p>
-            </div>
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 20 }}
+        className="flex flex-col justify-center items-center p-8 sm:p-16"
+      >
+        <div className="w-full max-w-md space-y-10">
+          {/* Brand Header */}
+          <div>
+            <h1 className="text-4xl font-black tracking-tight mb-2 uppercase italic">
+              Welcome Back.
+            </h1>
+            <p className="text-slate-500 font-medium">Continue your evolution.</p>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Email</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-base-content/40" />
+            <div className="space-y-2">
+              <label className="text-sm font-bold uppercase tracking-widest text-slate-400">Email Address</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-primary transition-colors">
+                  <Mail size={18} />
                 </div>
                 <input
                   type="email"
                   {...register("email")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.email ? "input-error" : ""
+                  className={`w-full bg-white/5 border-2 border-white/5 rounded-xl py-4 pl-12 pr-4 focus:border-primary/50 focus:bg-white/10 outline-none transition-all duration-300 ${
+                    errors.email ? "border-red-500/50" : ""
                   }`}
                   placeholder="you@example.com"
                 />
               </div>
               {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                <p className="text-red-500 text-xs mt-1 ml-1">{errors.email.message}</p>
               )}
             </div>
 
             {/* Password */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Password</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-base-content/40" />
+            <div className="space-y-2">
+              <label className="text-sm font-bold uppercase tracking-widest text-slate-400">Password</label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-primary transition-colors">
+                  <Lock size={18} />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
-                  className={`input input-bordered w-full pl-10 ${
-                    errors.password ? "input-error" : ""
+                  className={`w-full bg-white/5 border-2 border-white/5 rounded-xl py-4 pl-12 pr-12 focus:border-primary/50 focus:bg-white/10 outline-none transition-all duration-300 ${
+                    errors.password ? "border-red-500/50" : ""
                   }`}
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 hover:text-white transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-base-content/40" />
+                    <EyeOff size={18} />
                   ) : (
-                    <Eye className="h-5 w-5 text-base-content/40" />
+                    <Eye size={18} />
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                <p className="text-red-500 text-xs mt-1 ml-1">{errors.password.message}</p>
               )}
             </div>
 
             {/* Submit Button */}
             <button
               type="submit"
-              className="btn btn-primary w-full"
+              className="w-full bg-linear-to-r from-primary to-blue-600 hover:from-primary/80 hover:to-blue-600/80 text-white font-black py-4 rounded-xl shadow-[0_0_20px_rgba(var(--p),0.3)] hover:shadow-primary/40 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50"
               disabled={isLoggingIn}
             >
               {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading...
+                  AUTHENTICATING...
                 </>
               ) : (
-                "Sign in"
+                "SIGN IN."
               )}
             </button>
           </form>
 
           {/* Footer */}
-          <div className="text-center">
-            <p className="text-base-content/60">
-              Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
-                Create account
-              </Link>
-            </p>
-          </div>
+          <p className="text-center text-slate-500 font-medium">
+            Don&apos;t have an account?{" "}
+            <Link to="/signup" className="text-primary hover:underline font-bold">
+              Create account.
+            </Link>
+          </p>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Right Side - Image/Pattern */}
+      {/* Right Side - Animated Hero */}
       <AuthImagePattern
-        title={"Welcome back!"}
+        title={"Sync Your Progress."}
         subtitle={
-          "Sign in to continue your journey with us. Don't have an account? Create one now."
+          "Sign in to continue your journey. Your lab, your rules, your code."
         }
       />
     </div>

@@ -1,145 +1,133 @@
 import React, { useEffect } from 'react';
 import { useProblemStore } from '../store/useProblemStore';
 import { Link } from 'react-router-dom';
-import { Tag, ExternalLink, AlertTriangle, CheckCircle, Circle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { 
+  Tag, 
+  ExternalLink, 
+  CheckCircle2, 
+  Circle, 
+  Zap, 
+  Terminal, 
+  BarChart3,
+  ChevronRight
+} from 'lucide-react';
 
 const ProblemSolvedByUser = () => {
   const { getSolvedProblemByUser, solvedProblems } = useProblemStore();
 
   useEffect(() => {
     getSolvedProblemByUser();
-  }, []);
+  }, [getSolvedProblemByUser]);
 
-  // Function to get difficulty badge styling
-  const getDifficultyBadge = (difficulty) => {
-    switch (difficulty) {
-      case 'EASY':
-        return (
-          <div className="badge badge-success gap-1">
-            <CheckCircle size={12} />
-            Easy
-          </div>
-        );
-      case 'MEDIUM':
-        return (
-          <div className="badge badge-warning gap-1">
-            <Circle size={12} />
-            Medium
-          </div>
-        );
-      case 'HARD':
-        return (
-          <div className="badge badge-error gap-1">
-            <AlertTriangle size={12} />
-            Hard
-          </div>
-        );
-      default:
-        return (
-          <div className="badge badge-ghost">
-            Unknown
-          </div>
-        );
-    }
+  const difficultyStyles = {
+    EASY: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+    MEDIUM: "text-amber-400 bg-amber-400/10 border-amber-400/20",
+    HARD: "text-rose-400 bg-rose-400/10 border-rose-400/20",
   };
 
+  const getStats = () => {
+    const easy = solvedProblems.filter(p => p.difficulty === 'EASY').length;
+    const medium = solvedProblems.filter(p => p.difficulty === 'MEDIUM').length;
+    const hard = solvedProblems.filter(p => p.difficulty === 'HARD').length;
+    const total = solvedProblems.length;
+    return { easy, medium, hard, total };
+  };
+
+  const stats = getStats();
+
   return (
-    <div className="p-4 bg-base-200 ">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold text-primary mb-6">Problems Solved</h2>
-        
-        {solvedProblems.length === 0 ? (
-          <div className="card bg-base-100 shadow-xl">
-            <div className="card-body">
-              <h3 className="text-lg font-medium">No problems solved yet</h3>
-              <p className="text-base-content/70">Start solving problems to see them listed here!</p>
-              <div className="card-actions justify-end">
-                <Link to="/problems" className="btn btn-primary">
-                  View Problems
-                </Link>
-              </div>
+    <div className="space-y-10">
+      {/* 1. Progress Telemetry Header */}
+      {solvedProblems.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="md:col-span-1 bg-white/[0.03] border border-white/5 p-6 rounded-3xl flex flex-col justify-center">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Solved_Modules</p>
+            <h3 className="text-4xl font-black italic text-primary tracking-tighter">{stats.total}</h3>
+          </div>
+          
+          <div className="md:col-span-3 bg-white/[0.03] border border-white/5 p-6 rounded-3xl">
+            <div className="flex justify-between items-end mb-4">
+               <div className="flex items-center gap-2">
+                 <BarChart3 size={16} className="text-slate-500" />
+                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Difficulty_Distribution</span>
+               </div>
+               <div className="flex gap-4 text-[10px] font-black uppercase tracking-tighter">
+                 <span className="text-emerald-400">E: {stats.easy}</span>
+                 <span className="text-amber-400">M: {stats.medium}</span>
+                 <span className="text-rose-400">H: {stats.hard}</span>
+               </div>
             </div>
+            {/* Visual Progress Bar */}
+            <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex">
+               <motion.div initial={{ width: 0 }} animate={{ width: `${(stats.easy/stats.total)*100}%` }} className="bg-emerald-400 h-full" />
+               <motion.div initial={{ width: 0 }} animate={{ width: `${(stats.medium/stats.total)*100}%` }} className="bg-amber-400 h-full" />
+               <motion.div initial={{ width: 0 }} animate={{ width: `${(stats.hard/stats.total)*100}%` }} className="bg-rose-400 h-full" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Solved Modules Feed */}
+      <div className="space-y-3">
+        {solvedProblems.length === 0 ? (
+          <div className="py-16 text-center bg-white/[0.02] border-2 border-dashed border-white/5 rounded-[2.5rem]">
+            <Terminal size={40} className="mx-auto text-slate-700 mb-4" />
+            <p className="text-xs font-black uppercase tracking-widest text-slate-500 italic">No modules solved in this sector.</p>
+            <Link to="/" className="btn btn-link btn-primary no-underline mt-4 uppercase text-[10px] font-black tracking-widest">
+              Access_Global_Index
+            </Link>
           </div>
         ) : (
-          <div className="card bg-base-100 shadow-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="table table-zebra w-full">
-                <thead>
-                  <tr>
-                    <th className="bg-base-300">Problem</th>
-                    <th className="bg-base-300">Difficulty</th>
-                    <th className="bg-base-300">Tags</th>
-                    <th className="bg-base-300 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {solvedProblems.map((problem) => (
-                    <tr key={problem.id} className="hover">
-                      <td className="font-medium">{problem.title}</td>
-                      <td>{getDifficultyBadge(problem.difficulty)}</td>
-                      <td>
-                        <div className="flex flex-wrap gap-1">
-                          {problem.tags && problem.tags.map((tag, index) => (
-                            <div key={index} className="badge badge-outline badge-primary">
-                              <Tag size={10} className="mr-1" />
-                              {tag}
-                            </div>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="text-center">
-                        <div className="flex justify-center">
-                          <Link 
-                            to={`/problems/${problem.id}`} 
-                            className="btn btn-sm btn-outline btn-primary"
-                          >
-                            <ExternalLink size={14} className="mr-1" />
-                            View
-                          </Link>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            
-            <div className="card-footer bg-base-200 p-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">
-                  Total problems solved: <span className="font-bold">{solvedProblems.length}</span>
+          solvedProblems.map((problem, index) => (
+            <motion.div
+              key={problem.id}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="group flex flex-col md:flex-row items-center justify-between p-5 bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-primary/30 rounded-2xl transition-all duration-300"
+            >
+              <div className="flex items-center gap-6 w-full md:w-auto">
+                <div className="size-10 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-400 border border-emerald-400/20">
+                  <CheckCircle2 size={20} />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold tracking-tight text-white group-hover:text-primary transition-colors">
+                    {problem.title}
+                  </h4>
+                  <div className="flex gap-2 mt-1">
+                    {problem.tags?.slice(0, 3).map((tag, idx) => (
+                      <span key={idx} className="text-[9px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-1">
+                        <Tag size={8} /> {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-6 w-full md:w-auto mt-4 md:mt-0 justify-between md:justify-end">
+                <span className={`px-4 py-1 rounded-lg text-[9px] font-black tracking-widest border uppercase ${difficultyStyles[problem.difficulty]}`}>
+                  {problem.difficulty}
                 </span>
-                <Link to="/problems" className="btn btn-sm btn-primary">
-                  Solve more problems
+
+                <Link 
+                  to={`/problem/${problem.id}`} 
+                  className="p-3 bg-white/5 hover:bg-primary text-slate-400 hover:text-black rounded-xl transition-all shadow-lg group/btn"
+                >
+                  <ChevronRight size={18} className="group-hover/btn:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          ))
         )}
-        
-        {/* Stats Cards */}
-        {solvedProblems.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="stat bg-base-100 shadow rounded-box">
-              <div className="stat-title">Easy</div>
-              <div className="stat-value text-success">
-                {solvedProblems.filter(p => p.difficulty === 'EASY').length}
-              </div>
-            </div>
-            <div className="stat bg-base-100 shadow rounded-box">
-              <div className="stat-title">Medium</div>
-              <div className="stat-value text-warning">
-                {solvedProblems.filter(p => p.difficulty === 'MEDIUM').length}
-              </div>
-            </div>
-            <div className="stat bg-base-100 shadow rounded-box">
-              <div className="stat-title">Hard</div>
-              <div className="stat-value text-error">
-                {solvedProblems.filter(p => p.difficulty === 'HARD').length}
-              </div>
-            </div>
-          </div>
-        )}
+      </div>
+
+      {/* 3. Global Action Footer */}
+      <div className="flex justify-center pt-4">
+         <Link to="/" className="group flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl transition-all">
+            <Zap size={16} className="text-primary group-hover:scale-110 transition-transform" />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">Sync_New_Challenges</span>
+         </Link>
       </div>
     </div>
   );

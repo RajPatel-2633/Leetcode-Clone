@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Mail, User, Shield, Image, Edit, CheckCircle2, Code2, BookOpen, ThumbsUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  ArrowLeft, Mail, User, Shield, Image as ImageIcon, 
+  Edit3, CheckCircle2, Code2, BookOpen, ThumbsUp, 
+  Terminal, Activity, Zap, Lock 
+} from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useProblemStore } from "../store/useProblemStore";
 import { useSubmissionStore } from "../store/useSubmissionStore";
@@ -14,11 +19,13 @@ const Profile = () => {
   const { solvedProblems } = useProblemStore();
   const { submissions, getAllSubmissions } = useSubmissionStore();
   const { playlists } = usePlaylistStore();
+  
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({
     name: authUser?.name || "",
     image: authUser?.image || ""
   });
+  
   const [statistics, setStatistics] = useState({
     problemsSolved: 0,
     totalSubmissions: 0,
@@ -27,233 +34,197 @@ const Profile = () => {
   });
   const [isLoadingStats, setIsLoadingStats] = useState(true);
 
-  // Fetch submissions when user logs in
   useEffect(() => {
-    if (authUser) {
-      getAllSubmissions(false); // Don't show toast
-    }
-  }, [authUser]);
+    if (authUser) getAllSubmissions(false);
+  }, [authUser, getAllSubmissions]);
 
-  // Calculate statistics when data changes
   useEffect(() => {
     if (authUser) {
       const problemsSolved = solvedProblems.length;
       const totalSubmissions = submissions.length;
       const playlistsCreated = playlists.length;
-
-      // Calculate success rate (submissions with "Accepted" status)
       const successfulSubmissions = submissions.filter(sub => sub.status === "Accepted").length;
       const successRate = totalSubmissions > 0 ? Math.round((successfulSubmissions / totalSubmissions) * 100) : 0;
 
-      setStatistics({
-        problemsSolved,
-        totalSubmissions,
-        playlistsCreated,
-        successRate
-      });
+      setStatistics({ problemsSolved, totalSubmissions, playlistsCreated, successRate });
       setIsLoadingStats(false);
     }
   }, [authUser, solvedProblems, playlists, submissions]);
-  
+
+  const statsConfig = [
+    { label: "Solved", value: statistics.problemsSolved, icon: CheckCircle2, color: "text-emerald-400" },
+    { label: "Submissions", value: statistics.totalSubmissions, icon: Code2, color: "text-blue-400" },
+    { label: "Playlists", value: statistics.playlistsCreated, icon: BookOpen, color: "text-purple-400" },
+    { label: "Accuracy", value: `${statistics.successRate}%`, icon: ThumbsUp, color: "text-amber-400" },
+  ];
+
   return (
-    <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center py-10 px-4 md:px-8 w-full">
-      {/* Header with back button */}
-      <div className="flex flex-row justify-between items-center w-full mb-6">
-        <div className="flex items-center gap-3">
-          <Link to={"/"} className="btn btn-circle btn-ghost">
-            <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-[#050505] text-white py-12 px-4">
+      {/* 1. Page Header */}
+      <div className="max-w-6xl mx-auto mb-12 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
+            <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
           </Link>
-          <h1 className="text-3xl font-bold text-primary">Profile</h1>
-        </div>
-      </div>
-      
-      <div className="w-full max-w-4xl mx-auto">
-        {/* Profile Card */}
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body">
-            {/* Profile Header */}
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              {/* Avatar */}
-              <div className="avatar placeholder">
-                <div className="bg-neutral text-neutral-content rounded-full w-24 h-24 ring ring-primary ring-offset-base-100 ring-offset-2">
-                  {authUser?.image ? (
-                    <img src={authUser.image} alt={authUser?.name || "User"} className="rounded-full" />
-                  ) : (
-                    <span className="text-3xl">{authUser?.name ? authUser.name.charAt(0).toUpperCase() : "U"}</span>
-                  )}
-                </div>
-              </div>
-              
-              {/* Name and Role Badge */}
-              <div className="text-center md:text-left">
-                <h2 className="text-2xl font-bold">{authUser?.name || "User"}</h2>
-                <div className="badge badge-primary mt-2">{authUser?.role || "USER"}</div>
-              </div>
-            </div>
-            
-            {/* Statistics */}
-            <div className="divider">Statistics</div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <CheckCircle2 className="w-6 h-6" />
-                </div>
-                <div className="stat-title">Problems Solved</div>
-                <div className="stat-value text-2xl">
-                  {isLoadingStats ? "..." : statistics.problemsSolved}
-                </div>
-                <div className="stat-desc">Keep solving!</div>
-              </div>
-              
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <Code2 className="w-6 h-6" />
-                </div>
-                <div className="stat-title">Total Submissions</div>
-                <div className="stat-value text-2xl">
-                  {isLoadingStats ? "..." : statistics.totalSubmissions}
-                </div>
-                <div className="stat-desc">Submissions made</div>
-              </div>
-              
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <BookOpen className="w-6 h-6" />
-                </div>
-                <div className="stat-title">Playlists Created</div>
-                <div className="stat-value text-2xl">
-                  {isLoadingStats ? "..." : statistics.playlistsCreated}
-                </div>
-                <div className="stat-desc">Your collections</div>
-              </div>
-              
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <ThumbsUp className="w-6 h-6" />
-                </div>
-                <div className="stat-title">Success Rate</div>
-                <div className="stat-value text-2xl">
-                  {isLoadingStats ? "..." : `${statistics.successRate}%`}
-                </div>
-                <div className="stat-desc">Submission accuracy</div>
-              </div>
-            </div>
-            
-            <div className="divider"></div>
-            
-            {/* User Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Email */}
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <Mail className="w-8 h-8" />
-                </div>
-                <div className="stat-title">Email</div>
-                <div className="stat-value text-lg break-all">{authUser?.email || "No email"}</div>
-              </div>
-              
-              {/* User ID */}
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <User className="w-8 h-8" />
-                </div>
-                <div className="stat-title">User ID</div>
-                <div className="stat-value text-sm break-all">{authUser?.id || "No ID"}</div>
-              </div>
-              
-              {/* Role Status */}
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <Shield className="w-8 h-8" />
-                </div>
-                <div className="stat-title">Role</div>
-                <div className="stat-value text-lg">{authUser?.role || "USER"}</div>
-                <div className="stat-desc">
-                  {authUser?.role === "ADMIN" ? "Full system access" : "Limited access"}
-                </div>
-              </div>
-              
-              {/* Profile Image Status */}
-              <div className="stat bg-base-200 rounded-box">
-                <div className="stat-figure text-primary">
-                  <Image className="w-8 h-8" />
-                </div>
-                <div className="stat-title">Profile Image</div>
-                <div className="stat-value text-lg">
-                  {authUser?.image ? "Uploaded" : "Not Set"}
-                </div>
-                <div className="stat-desc">
-                  {authUser?.image ? "Image available" : "Upload a profile picture"}
-                </div>
-              </div>
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="card-actions justify-end mt-6">
-              <button className="btn btn-outline btn-primary" onClick={() => setIsEditModalOpen(true)}>
-                <Edit className="w-4 h-4 mr-2" />
-                Edit Profile
-              </button>
-              <button className="btn btn-primary">Change Password</button>
-            </div>
+          <div>
+            <h1 className="text-4xl font-black italic uppercase tracking-tighter">Identity.</h1>
+            <p className="text-slate-500 text-xs font-bold tracking-[0.2em] uppercase mt-1">User_Profile_Buffer</p>
           </div>
         </div>
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/5 border border-primary/20 rounded-full">
+            <Activity size={14} className="text-primary animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Active</span>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8">
         
-        <ProfileSubmission/>
-        <ProblemSolvedByUser/>
-        <PlaylistProfile/>
-      </div>
-      
-      {/* Edit Profile Modal */}
-      {isEditModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-md">
-            <div className="flex justify-between items-center p-4 border-b border-base-300">
-              <h3 className="text-xl font-bold">Edit Profile</h3>
-              <button onClick={() => setIsEditModalOpen(false)} className="btn btn-ghost btn-sm btn-circle">
-                ×
+        {/* 2. Left Sidebar: Personal Info */}
+        <div className="space-y-6">
+          <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md sticky top-28">
+            <div className="flex flex-col items-center text-center">
+              <div className="relative group mb-6">
+                <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full group-hover:bg-primary/40 transition-all" />
+                <div className="relative size-32 rounded-full border-2 border-primary p-1">
+                    <div className="w-full h-full rounded-full bg-neutral overflow-hidden flex items-center justify-center">
+                        {authUser?.image ? (
+                            <img src={authUser.image} alt="User" className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="text-4xl font-black">{authUser?.name?.charAt(0).toUpperCase()}</span>
+                        )}
+                    </div>
+                </div>
+                <button 
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="absolute bottom-0 right-0 p-2 bg-primary text-black rounded-xl shadow-lg hover:scale-110 transition-transform"
+                >
+                  <Edit3 size={16} />
+                </button>
+              </div>
+
+              <h2 className="text-2xl font-black tracking-tight italic uppercase">{authUser?.name || "Anonymous"}</h2>
+              <div className="mt-2 px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-400">
+                {authUser?.role || "USER"}
+              </div>
+
+              <div className="w-full space-y-4 mt-10">
+                <div className="flex items-center gap-4 p-4 bg-black/40 rounded-2xl border border-white/5">
+                   <Mail className="text-primary" size={20} />
+                   <div className="text-left">
+                      <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Email_Endpoint</p>
+                      <p className="text-xs font-bold truncate max-w-[180px]">{authUser?.email}</p>
+                   </div>
+                </div>
+                <div className="flex items-center gap-4 p-4 bg-black/40 rounded-2xl border border-white/5">
+                   <Shield className="text-primary" size={20} />
+                   <div className="text-left">
+                      <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Access_Level</p>
+                      <p className="text-xs font-bold uppercase">{authUser?.role === "ADMIN" ? "Restricted Root" : "Standard Operator"}</p>
+                   </div>
+                </div>
+              </div>
+
+              <button className="w-full mt-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                <Lock size={14} /> Change Access Keys
               </button>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium">Name</span>
-                </label>
-                <input
-                  type="text"
-                  className="input input-bordered w-full"
-                  value={editForm.name}
-                  onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                />
-              </div>
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-medium">Profile Image URL</span>
-                </label>
-                <input
-                  type="url"
-                  className="input input-bordered w-full"
-                  value={editForm.image}
-                  onChange={(e) => setEditForm({...editForm, image: e.target.value})}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-              <div className="flex justify-end gap-2 mt-6">
-                <button onClick={() => setIsEditModalOpen(false)} className="btn btn-ghost">
-                  Cancel
-                </button>
-                <button className="btn btn-primary" onClick={() => {
-                  // TODO: Implement profile update API call
-                  alert("Profile update functionality coming soon!");
-                  setIsEditModalOpen(false);
-                }}>
-                  Save Changes
-                </button>
-              </div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* 3. Main Content: Stats & Submissions */}
+        <div className="space-y-8">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {statsConfig.map((stat, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white/[0.02] border border-white/5 p-6 rounded-3xl backdrop-blur-sm group hover:border-primary/30 transition-all"
+              >
+                <stat.icon className={`${stat.color} mb-3 group-hover:scale-110 transition-transform`} size={20} />
+                <div className="text-3xl font-black italic tracking-tighter">
+                  {isLoadingStats ? "..." : stat.value}
+                </div>
+                <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Sub-Components Sections */}
+          <div className="space-y-12 pt-4">
+            <section>
+                <div className="flex items-center gap-4 mb-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Submissions_Log</h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+                </div>
+                <ProfileSubmission />
+            </section>
+
+            <section>
+                <div className="flex items-center gap-4 mb-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Solved_Modules</h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+                </div>
+                <ProblemSolvedByUser />
+            </section>
+
+            <section>
+                <div className="flex items-center gap-4 mb-6">
+                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Collections</h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+                </div>
+                <PlaylistProfile />
+            </section>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Edit Modal - Themed */}
+      <AnimatePresence>
+        {isEditModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsEditModalOpen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+              className="relative bg-[#121212] border border-white/10 w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl"
+            >
+              <h3 className="text-2xl font-black italic uppercase tracking-tighter mb-8">Patch_Profile</h3>
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Handle</label>
+                  <input
+                    type="text"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:border-primary outline-none transition-all"
+                    value={editForm.name}
+                    onChange={(e) => setEditForm({...editForm, name: e.target.value})}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visual_Path (URL)</label>
+                  <input
+                    type="url"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:border-primary outline-none transition-all"
+                    value={editForm.image}
+                    onChange={(e) => setEditForm({...editForm, image: e.target.value})}
+                  />
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Abort</button>
+                  <button className="flex-[2] py-4 bg-primary text-black rounded-xl text-[10px] font-black uppercase tracking-widest" onClick={() => setIsEditModalOpen(false)}>Save Changes</button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

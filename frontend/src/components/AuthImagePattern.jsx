@@ -1,132 +1,113 @@
-import { Code, Terminal, FileCode, Braces } from "lucide-react"
-import { useEffect, useState } from "react"
+import { motion } from "framer-motion";
+import { Code, Terminal, FileCode, Braces, Cpu } from "lucide-react";
 
-
-
-const CodeBackground = ({ title, subtitle }) => {
-  const [activeIndex, setActiveIndex] = useState(0)
-
-  // Code snippets to display in the background
-  const codeSnippets = [
-    `function twoSum(nums, target) {
-  const map = new Map();
-  for (let i = 0; i < nums.length; i++) {
-    const complement = target - nums[i];
-    if (map.has(complement)) {
-      return [map.get(complement), i];
-    }
-    map.set(nums[i], i);
-  }
-  return [];
-}`,
-    `class ListNode {
-  constructor(val = 0, next = null) {
-    this.val = val;
-    this.next = next;
-  }
-}
-
-function reverseList(head) {
-  let prev = null;
-  let current = head;
-  while (current) {
-    const next = current.next;
-    current.next = prev;
-    prev = current;
-    current = next;
-  }
-  return prev;
-}`,
-    `function isValid(s) {
-  const stack = [];
-  const map = {
-    '(': ')',
-    '{': '}',
-    '[': ']'
-  };
-  
-  for (let i = 0; i < s.length; i++) {
-    if (s[i] in map) {
-      stack.push(s[i]);
-    } else {
-      const last = stack.pop();
-      if (map[last] !== s[i]) return false;
-    }
-  }
-  
-  return stack.length === 0;
-}`,
-  ]
-
-  // Rotate through code snippets
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % codeSnippets.length)
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [codeSnippets.length])
+const AuthImagePattern = ({ title, subtitle }) => {
+  // Floating icons for the background "nebula"
+  const bgIcons = [
+    { Icon: Braces, top: "10%", left: "15%", delay: 0 },
+    { Icon: FileCode, top: "25%", left: "80%", delay: 0.5 },
+    { Icon: Terminal, top: "70%", left: "15%", delay: 1 },
+    { Icon: Code, top: "60%", left: "75%", delay: 1.5 },
+    { Icon: Cpu, top: "85%", left: "45%", delay: 2 },
+  ];
 
   return (
-    <div className="hidden lg:flex flex-col items-center justify-center bg-slate-900 text-white p-12 relative overflow-hidden">
-      {/* Animated code symbols in background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-[10%] left-[15%] animate-pulse">
-          <Braces size={40} />
-        </div>
-        <div className="absolute top-[30%] left-[80%] animate-pulse delay-300">
-          <FileCode size={50} />
-        </div>
-        <div className="absolute top-[70%] left-[20%] animate-pulse delay-700">
-          <Terminal size={45} />
-        </div>
-        <div className="absolute top-[60%] left-[75%] animate-pulse delay-500">
-          <Code size={55} />
-        </div>
-        <div className="absolute top-[85%] left-[45%] animate-pulse delay-200">
-          <Braces size={35} />
-        </div>
-        <div className="absolute top-[15%] left-[60%] animate-pulse delay-100">
-          <Terminal size={30} />
-        </div>
-      </div>
+    <div className="hidden lg:flex flex-col items-center justify-center bg-[#050505] p-12 relative overflow-hidden">
+      {/* 1. Ambient Background Glows */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[100px]" />
 
-      <div className="z-10 max-w-md flex flex-col items-center">
-        {/* Code editor mockup */}
-        <div className="w-full bg-slate-800 rounded-lg shadow-xl mb-8 overflow-hidden">
-          {/* Editor header */}
-          <div className="bg-slate-700 px-4 py-2 flex items-center">
-            <div className="flex space-x-2 mr-4">
-              <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            </div>
-            <div className="text-xs font-mono opacity-70">problem.js</div>
-          </div>
+      {/* 2. Floating Background Icons */}
+      {bgIcons.map((item, i) => (
+        <motion.div
+          key={i}
+          className="absolute text-white/5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ 
+            opacity: [0.05, 0.15, 0.05], 
+            y: [0, -20, 0],
+            rotate: [0, 10, 0]
+          }}
+          transition={{ duration: 5, repeat: Infinity, delay: item.delay }}
+          style={{ top: item.top, left: item.left }}
+        >
+          <item.Icon size={60} strokeWidth={1} />
+        </motion.div>
+      ))}
 
-          {/* Code content */}
-          <div className="p-4 font-mono text-xs sm:text-sm overflow-hidden relative h-64">
-            <pre className="whitespace-pre-wrap text-green-400 transition-opacity duration-1000">
-              {codeSnippets[activeIndex]}
-            </pre>
+      <div className="z-10 max-w-md w-full flex flex-col items-center">
+        {/* 3. The Rotating Geometric Core */}
+        <div className="relative w-72 h-72 mb-16 group">
+          {/* Outer Pulsing Glow */}
+          <div className="absolute inset-0 bg-primary/5 rounded-full blur-3xl animate-pulse" />
+          
+          {/* Outer Rotating Dotted Ring */}
+          <motion.div
+            className="absolute inset-0 border-2 border-dashed border-primary/20 rounded-full"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          />
+          
+          {/* The 3D Wireframe Hexagon (Icosahedron) */}
+          <motion.div 
+            className="absolute inset-0 flex items-center justify-center"
+            animate={{ 
+              rotateY: [0, 360],
+              rotateX: [0, 180, 0]
+            }}
+            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+            style={{ transformStyle: "preserve-3d" }}
+          >
+            <svg viewBox="0 0 100 100" className="w-56 h-56 drop-shadow-[0_0_20px_rgba(var(--p),0.5)]">
+              <motion.path
+                d="M50 5 L95 25 L95 75 L50 95 L5 75 L5 25 Z M50 5 L50 95 M5 25 L95 25 M5 75 L95 75 M5 25 L50 50 L95 25 M5 75 L50 50 L95 75"
+                fill="none"
+                stroke="currentColor"
+                className="text-primary"
+                strokeWidth="0.5"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+              />
+            </svg>
+          </motion.div>
 
-            {/* Blinking cursor */}
-            <div className="absolute bottom-4 right-4 w-2 h-4 bg-white animate-blink"></div>
-          </div>
+          {/* Floating 'Orbiting' Code Bits */}
+          <motion.div 
+             animate={{ rotate: -360 }}
+             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+             className="absolute inset-0"
+          >
+             <div className="absolute top-0 left-1/2 -translate-x-1/2 bg-[#121212] border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono text-primary shadow-xl">
+               function solve()
+             </div>
+             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 bg-[#121212] border border-white/10 px-3 py-1 rounded-full text-[10px] font-mono text-blue-400 shadow-xl">
+               O(log n)
+             </div>
+          </motion.div>
         </div>
 
-        {/* Logo */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-primary/10  flex items-center justify-center">
-            <Code className="w-6 h-6 text-primary" />
-          </div>
+        {/* 4. High-Impact Typography */}
+        <div className="text-center space-y-4">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl font-black tracking-tighter text-white uppercase italic leading-none"
+          >
+            {title}
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-slate-400 text-lg font-light tracking-wide max-w-sm mx-auto"
+          >
+            {subtitle}
+          </motion.p>
         </div>
-
-        {/* Text content */}
-        <h2 className="text-2xl font-bold mb-4 text-center">{title}</h2>
-        <p className="text-slate-300 text-center">{subtitle}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CodeBackground
+export default AuthImagePattern;

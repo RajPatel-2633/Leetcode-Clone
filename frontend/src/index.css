@@ -1,2 +1,86 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* --- LEETLABS CORE THEME & PERFORMANCE --- */
+
+:root {
+  /* This maps to your primary color #7480ff (DaisyUI Primary) */
+  /* Used for the global success/error background flashes */
+  --p: 116, 128, 255; 
+}
+
+@layer base {
+  html, body {
+    @apply bg-[#050505] text-white antialiased;
+    /* Prevent the bounce effect on mobile/trackpads to keep the 'App' feel */
+    overscroll-behavior: none;
+  }
+
+  /* Universal Selection Color */
+  ::selection {
+    background-color: rgba(116, 128, 255, 0.3);
+    color: white;
+  }
+}
+
+@layer components {
+  /* Smooth Hardware Acceleration for Glassmorphism */
+  .backdrop-blur-md, 
+  .backdrop-blur-xl,
+  .backdrop-blur-sm {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000;
+  }
+
+  /* Custom 'Lab' Scrollbar */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+  }
+
+  /* Chrome, Edge, and Safari Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    transition: background 0.3s ease;
+  }
+
+  .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: rgba(116, 128, 255, 0.3); /* Primary color glow on hover */
+  }
+
+  /* Hide scrollbar for the main App container but keep functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* --- MONACO EDITOR TWEAKS --- */
+/* Ensures the editor corners match our rounded UI */
+.monaco-editor, .overflow-guard {
+  border-radius: 0px !important; 
+}
+
+/* Custom Animation for the 'Initializing' Loader */
+@keyframes loading-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+
+.animate-loading-slide {
+  animation: loading-slide 2s ease-in-out infinite;
+}
