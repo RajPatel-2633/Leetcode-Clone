@@ -63,6 +63,11 @@ const ProblemsTable = ({ problems }) => {
     await createPlaylist(data);
   };
 
+  const handleAddToPlaylist = (problemId) => {
+    setSelectedProblemId(problemId);
+    setIsAddToPlaylistModalOpen(true);
+  };
+
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
       {/* Header with Create Playlist Button */}

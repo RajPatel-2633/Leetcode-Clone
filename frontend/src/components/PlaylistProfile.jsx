@@ -31,7 +31,13 @@ const PlaylistProfile = () => {
   };
 
   const handleRemoveProblem = async (playlistId, problemId) => {
+    // Basic guard to avoid accidental removals.
+    const ok = window.confirm("Remove this problem from the playlist?");
+    if (!ok) return;
+
     await removeProblemFromPlaylist(playlistId, [problemId]);
+    // Keep UI in sync with backend after removal.
+    await getAllPlaylists();
   };
 
   const getDifficultyBadge = (difficulty) => {
@@ -150,13 +156,23 @@ const PlaylistProfile = () => {
                                     </div>
                                   </td>
                                   <td className="text-right">
-                                    <Link 
-                                      to={`/problem/${item.problem.id}`} 
-                                      className="btn btn-xs btn-outline btn-primary"
-                                    >
-                                      <ExternalLink size={12} />
-                                      Solve
-                                    </Link>
+                                    <div className="flex justify-end items-center gap-2">
+                                      <Link 
+                                        to={`/problem/${item.problem.id}`} 
+                                        className="btn btn-xs btn-outline btn-primary"
+                                      >
+                                        <ExternalLink size={12} />
+                                        Solve
+                                      </Link>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveProblem(playlist.id, item.problem.id)}
+                                        className="btn btn-xs btn-outline btn-error"
+                                        title="Remove from playlist"
+                                      >
+                                        <Trash2 size={12} />
+                                      </button>
+                                    </div>
                                   </td>
                                 </tr>
                               ))}
