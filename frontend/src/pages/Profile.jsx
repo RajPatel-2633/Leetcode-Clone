@@ -1,18 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, User, Shield, Image, Edit, CheckCircle2, Code2, BookOpen, ThumbsUp } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useProblemStore } from "../store/useProblemStore";
+import { useSubmissionStore } from "../store/useSubmissionStore";
+import { usePlaylistStore } from "../store/usePlaylistStore";
 import ProfileSubmission from "../components/ProfileSubmission";
 import ProblemSolvedByUser from "../components/ProblemSolvedByUser";
 import PlaylistProfile from "../components/PlaylistProfile";
 
 const Profile = () => {
   const { authUser } = useAuthStore();
+  const { solvedProblems } = useProblemStore();
+  const { submissions, getAllSubmissions } = useSubmissionStore();
+  const { playlists } = usePlaylistStore();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editForm, setEditForm] = useState({
     name: authUser?.name || "",
     image: authUser?.image || ""
   });
+  const [statistics, setStatistics] = useState({
+    problemsSolved: 0,
+    totalSubmissions: 0,
+    playlistsCreated: 0,
+    successRate: 0
+  });
+  const [isLoadingStats, setIsLoadingStats] = useState(true);
+
+  // Fetch submissions when user logs in
+  useEffect(() => {
+    if (authUser) {
+      getAllSubmissions(false); // Don't show toast
+    }
+  }, [authUser]);
+
+  // Calculate statistics when data changes
+  useEffect(() => {
+    if (authUser) {
+      const problemsSolved = solvedProblems.length;
+      const totalSubmissions = submissions.length;
+      const playlistsCreated = playlists.length;
+
+      // Calculate success rate (submissions with "Accepted" status)
+      const successfulSubmissions = submissions.filter(sub => sub.status === "Accepted").length;
+      const successRate = totalSubmissions > 0 ? Math.round((successfulSubmissions / totalSubmissions) * 100) : 0;
+
+      setStatistics({
+        problemsSolved,
+        totalSubmissions,
+        playlistsCreated,
+        successRate
+      });
+      setIsLoadingStats(false);
+    }
+  }, [authUser, solvedProblems, playlists, submissions]);
   
   return (
     <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center py-10 px-4 md:px-8 w-full">
@@ -58,7 +99,9 @@ const Profile = () => {
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div className="stat-title">Problems Solved</div>
-                <div className="stat-value text-2xl">0</div>
+                <div className="stat-value text-2xl">
+                  {isLoadingStats ? "..." : statistics.problemsSolved}
+                </div>
                 <div className="stat-desc">Keep solving!</div>
               </div>
               
@@ -67,7 +110,9 @@ const Profile = () => {
                   <Code2 className="w-6 h-6" />
                 </div>
                 <div className="stat-title">Total Submissions</div>
-                <div className="stat-value text-2xl">0</div>
+                <div className="stat-value text-2xl">
+                  {isLoadingStats ? "..." : statistics.totalSubmissions}
+                </div>
                 <div className="stat-desc">Submissions made</div>
               </div>
               
@@ -76,7 +121,9 @@ const Profile = () => {
                   <BookOpen className="w-6 h-6" />
                 </div>
                 <div className="stat-title">Playlists Created</div>
-                <div className="stat-value text-2xl">0</div>
+                <div className="stat-value text-2xl">
+                  {isLoadingStats ? "..." : statistics.playlistsCreated}
+                </div>
                 <div className="stat-desc">Your collections</div>
               </div>
               
@@ -85,7 +132,9 @@ const Profile = () => {
                   <ThumbsUp className="w-6 h-6" />
                 </div>
                 <div className="stat-title">Success Rate</div>
-                <div className="stat-value text-2xl">0%</div>
+                <div className="stat-value text-2xl">
+                  {isLoadingStats ? "..." : `${statistics.successRate}%`}
+                </div>
                 <div className="stat-desc">Submission accuracy</div>
               </div>
             </div>

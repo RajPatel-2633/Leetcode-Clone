@@ -11,7 +11,7 @@ const PlaylistProfile = () => {
 
   useEffect(() => {
     getAllPlaylists();
-  }, [getAllPlaylists]);
+  }, []);
 
   const togglePlaylist = (id) => {
     if (expandedPlaylist === id) {
@@ -23,6 +23,15 @@ const PlaylistProfile = () => {
 
   const handleDelete = async (id) => {
     await deletePlaylist(id);
+  };
+
+  const handleCreatePlaylist = async (data) => {
+    await createPlaylist(data);
+    setIsCreateModalOpen(false);
+  };
+
+  const handleRemoveProblem = async (playlistId, problemId) => {
+    await removeProblemFromPlaylist(playlistId, [problemId]);
   };
 
   const getDifficultyBadge = (difficulty) => {
@@ -52,7 +61,7 @@ const PlaylistProfile = () => {
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-primary">My Playlists</h2>
-          <button className="btn btn-primary btn-sm">
+          <button className="btn btn-primary btn-sm" onClick={() => setIsCreateModalOpen(true)}>
             Create Playlist
           </button>
         </div>
@@ -63,7 +72,7 @@ const PlaylistProfile = () => {
               <h3 className="text-xl font-medium">No playlists found</h3>
               <p className="text-base-content/70">Create your first playlist to organize problems!</p>
               <div className="card-actions justify-center mt-4">
-                <button className="btn btn-primary">Create Playlist</button>
+                <button className="btn btn-primary" onClick={() => setIsCreateModalOpen(true)}>Create Playlist</button>
               </div>
             </div>
           </div>
@@ -167,6 +176,12 @@ const PlaylistProfile = () => {
             ))}
           </div>
         )}
+
+        <CreatePlaylistModal 
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          onSubmit={handleCreatePlaylist}
+        />
       </div>
     </div>
   );

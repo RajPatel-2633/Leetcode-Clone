@@ -9,7 +9,7 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllProblems();
-  }, [getAllProblems]);
+  }, []);
 
   console.log("HomePage rendering, problems:", problems);
 

@@ -3,13 +3,13 @@ import { useSubmissionStore } from '../store/useSubmissionStore';
 import { Code, Terminal, Clock, HardDrive, Check, X, ChevronDown, ChevronUp, Filter } from 'lucide-react';
 
 const ProfileSubmission = () => {
-  const { submissions, getAllSubmissions } = useSubmissionStore();
+  const { submissions } = useSubmissionStore();
   const [expandedSubmission, setExpandedSubmission] = useState(null);
   const [filter, setFilter] = useState('all');
 
   useEffect(() => {
-    getAllSubmissions();
-  }, [getAllSubmissions]);
+    // Submissions are fetched by Profile.jsx, no need to fetch again
+  }, []);
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -49,7 +49,7 @@ const ProfileSubmission = () => {
   });
 
   return (
-    <div className="n bg-base-200 p-4 md:p-8">
+    <div className="bg-base-200 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-primary mb-4 md:mb-0">My Submissions</h1>

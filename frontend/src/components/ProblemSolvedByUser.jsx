@@ -8,7 +8,7 @@ const ProblemSolvedByUser = () => {
 
   useEffect(() => {
     getSolvedProblemByUser();
-  }, [getSolvedProblemByUser]);
+  }, []);
 
   // Function to get difficulty badge styling
   const getDifficultyBadge = (difficulty) => {
