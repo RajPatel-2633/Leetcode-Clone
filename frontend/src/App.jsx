@@ -5,8 +5,8 @@ import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import { useAuthStore } from "./store/useAuthStore";
-import { useExecutionStore } from "./store/useExecution"; // Added for global feedback
-import { Loader2 } from "lucide-react";
+import { useExecutionStore } from "./store/useExecution"; 
+import { Loader2, Database } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 import ProblemPage from "./pages/ProblemPage";
@@ -18,7 +18,7 @@ import AdminRoute from "./components/AdminRoute";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  const { submission } = useExecutionStore(); // Access execution result for the glow effect
+  const { submission } = useExecutionStore(); 
   const location = useLocation();
 
   useEffect(() => {
@@ -26,57 +26,74 @@ const App = () => {
   }, [checkAuth]);
 
   /**
-   * GLOBAL FEEDBACK SYSTEM
-   * This determines if the entire app background should "flash" a color
-   * based on the code execution result.
+   * GLOBAL TELEMETRY GLOW
+   * Swapped soft shadow for a more "Physical Hardware" glow effect
    */
   const getAmbientGlow = () => {
     if (!submission) return "";
     return submission.status === "Accepted" 
-      ? "shadow-[inset_0_0_150px_rgba(16,185,129,0.1)]" // Emerald flash
-      : "shadow-[inset_0_0_150px_rgba(244,63,94,0.1)]";  // Rose flash
+      ? "shadow-[inset_0_0_200px_rgba(16,185,129,0.15)] border-emerald-500/20" 
+      : "shadow-[inset_0_0_200px_rgba(244,63,94,0.15)] border-rose-500/20";
   };
 
-  // 1. Initial System Bootup Loader
+  // 1. Initial System Bootup Loader: Hardened & Straight
   if (isCheckingAuth && !authUser)
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-[#050505] text-primary">
+      <div className="flex flex-col items-center justify-center h-screen bg-[#050505] text-primary font-mono overflow-hidden">
         <div className="relative flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl animate-pulse" />
-            <Loader2 className="size-14 animate-spin relative z-10" />
+            {/* Core Reactor Glow */}
+            <div className="absolute inset-0 rounded-full bg-primary/10 blur-[80px] animate-pulse" />
+            <Loader2 className="size-16 animate-spin relative z-10 stroke-[3px]" />
+            <div className="absolute -inset-10 border-2 border-white/5 rounded-full animate-[ping_3s_linear_infinite] opacity-10" />
         </div>
-        <div className="mt-6 flex flex-col items-center gap-1">
-            <p className="text-[10px] font-black tracking-[0.4em] uppercase opacity-40">Initializing_Lab_OS</p>
-            <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden">
-                <div className="h-full bg-primary w-1/2 animate-[loading_2s_ease-in-out_infinite]" />
+        <div className="mt-12 flex flex-col items-center gap-4">
+            <h2 className="text-xl font-black font-display tracking-tight uppercase text-white">
+              System_Boot_Sequence
+            </h2>
+            <div className="flex flex-col items-center gap-2">
+                <p className="text-[10px] font-black tracking-[0.6em] uppercase text-primary/40 animate-pulse">
+                  Initializing_Lab_OS_V4
+                </p>
+                <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-full bg-primary w-1/2 animate-[loading_1.5s_infinite_linear]" />
+                </div>
             </div>
         </div>
       </div>
     );
 
   return (
-    <div className={`h-screen w-full bg-[#050505] transition-all duration-1000 overflow-hidden ${getAmbientGlow()}`}>
+    <div className={`h-screen w-full bg-[#050505] transition-all duration-1000 border-0 overflow-hidden relative ${getAmbientGlow()}`}>
       <Toaster 
         position="top-right"
         toastOptions={{
             duration: 4000,
             style: {
-                background: '#121212',
+                background: '#080808',
                 color: '#fff',
-                border: '1px solid rgba(255,255,255,0.1)',
-                padding: '12px 24px',
-                fontSize: '12px',
+                border: '2px solid rgba(255,255,255,0.05)',
+                padding: '16px 28px',
+                fontSize: '11px',
+                fontFamily: 'JetBrains Mono, monospace',
                 fontWeight: '900',
-                letterSpacing: '0.1em',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
-                borderRadius: '16px',
+                borderRadius: '4px', // Squared off for Brutalist feel
+                boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
             },
+            success: {
+              iconTheme: { primary: '#7480ff', secondary: '#000' },
+              style: { borderLeft: '4px solid #7480ff' }
+            },
+            error: {
+              iconTheme: { primary: '#f43f5e', secondary: '#000' },
+              style: { borderLeft: '4px solid #f43f5e' }
+            }
         }}
       />
       
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          {/* Unauthenticated routes: Pure Viewports */}
           <Route
             path="/login"
             element={!authUser ? <LoginPage /> : <Navigate to="/" />}
@@ -86,7 +103,6 @@ const App = () => {
             element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
           />
 
-          {/* Authenticated routes: Wrapped in Fixed Layout */}
           <Route path="/" element={authUser ? <Layout /> : <Navigate to="/login" />}>
             <Route index element={<HomePage />} />
             <Route path="problem/:id" element={<ProblemPage />} />
@@ -98,24 +114,31 @@ const App = () => {
         </Routes>
       </AnimatePresence>
 
-      {/* Global CSS for the custom loader bar and scrollbars */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes loading {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(200%); }
         }
         .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
+          width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: transparent;
+          background: rgba(0,0,0,0.2);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255,255,255,0.02);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: rgba(116, 128, 255, 0.5);
+          background: rgba(116, 128, 255, 0.3);
+        }
+        /* Global Font Fixes to ensure "Straight" weights everywhere */
+        body {
+          font-style: normal !important;
+        }
+        h1, h2, h3, h4, button {
+          font-style: normal !important;
+          text-transform: uppercase !important;
         }
       `}} />
     </div>

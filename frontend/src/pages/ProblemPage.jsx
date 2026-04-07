@@ -69,7 +69,7 @@ const ProblemPage = () => {
   };
 
   const handleRunCode = async () => {
-    if (!code.trim()) return toast.error("Write some code first.");
+    if (!code.trim()) return toast.error("ACCESS_DENIED: SOURCE_BUFFER_EMPTY");
     const languageId = getLanguageId(selectedLanguage);
     const stdin = testCases.map((tc) => tc.input);
     const expected_outputs = testCases.map((tc) => tc.output);
@@ -87,80 +87,89 @@ const ProblemPage = () => {
       <div className="h-full flex flex-col items-center justify-center bg-[#050505]">
         <div className="relative">
           <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
-          <Terminal size={64} className="text-primary animate-bounce" />
+          <Terminal size={64} strokeWidth={3} className="text-primary" />
         </div>
-        <p className="mt-8 font-black uppercase tracking-[0.4em] text-xs text-primary/60">Booting Environment...</p>
+        <p className="mt-8 font-mono font-black uppercase tracking-[0.5em] text-[10px] text-primary/60">
+          BOOTING_ENVIRONMENT // MOUNTING_DATA_SECTOR
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="h-[calc(100vh-120px)] flex flex-col gap-6 overflow-hidden">
+    <div className="h-[calc(100vh-120px)] flex flex-col gap-6 overflow-hidden px-4 md:px-0">
       
-      {/* 1. Header Hub */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 bg-white/[0.02] border border-white/5 p-6 rounded-[2rem] backdrop-blur-md shrink-0">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="p-2 hover:bg-white/5 rounded-lg transition-colors group">
-              <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+      {/* 1. Header Hub: High-Density Control Bar */}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-6 bg-white/[0.02] border-2 border-white/5 p-6 rounded-[1.5rem] backdrop-blur-md shrink-0 shadow-2xl">
+          <div className="flex items-center gap-8">
+            <Link to="/" className="p-3 bg-white/5 border-2 border-white/5 hover:border-primary/40 rounded-xl transition-all group">
+              <ArrowLeft className="group-hover:-translate-x-1 transition-transform" strokeWidth={3} />
             </Link>
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-black italic uppercase tracking-tighter">{problem.title}</h1>
-                <span className={`text-[10px] px-2 py-0.5 font-bold rounded border ${
-                    problem.difficulty === "EASY" ? "text-emerald-400 border-emerald-400/20" : 
-                    problem.difficulty === "MEDIUM" ? "text-amber-400 border-amber-400/20" : "text-rose-400 border-rose-400/20"
+            <div className="space-y-1">
+              <div className="flex items-center gap-4">
+                <h1 className="text-3xl font-black font-display uppercase tracking-tight text-white leading-none">
+                  {problem.title}
+                </h1>
+                <span className={`text-[10px] px-3 py-1 font-mono font-black rounded-lg border-2 uppercase tracking-widest ${
+                    problem.difficulty === "EASY" ? "text-emerald-400 border-emerald-400/20 bg-emerald-400/5" : 
+                    problem.difficulty === "MEDIUM" ? "text-amber-400 border-amber-400/20 bg-amber-400/5" : "text-rose-500 border-rose-500/20 bg-rose-500/5"
                 }`}>{problem.difficulty}</span>
               </div>
-              <div className="flex items-center gap-4 text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">
-                <span className="flex items-center gap-1"><Users size={12}/> {submissionCount} Attempts</span>
-                <span className="flex items-center gap-1"><ThumbsUp size={12}/> 95% Success Rate</span>
+              <div className="flex items-center gap-6 text-[9px] font-mono font-black text-slate-600 uppercase tracking-[0.3em]">
+                <span className="flex items-center gap-2"><Users size={12}/> {submissionCount} ATTEMPTS_LOGGED</span>
+                <span className="flex items-center gap-2"><ThumbsUp size={12}/> 95% SUCCESS_RATE</span>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <select 
-                className="bg-black/40 border border-white/10 rounded-xl px-4 py-2 text-[10px] font-black uppercase outline-none focus:border-primary/50 transition-all"
-                value={selectedLanguage}
-                onChange={handleLanguageChange}
-            >
-                {Object.keys(problem.codeSnippets || {}).map((lang) => (
-                    <option key={lang} value={lang} className="bg-[#121212]">{lang}</option>
-                ))}
-            </select>
+          <div className="flex items-center gap-4">
+            <div className="relative group">
+              <select 
+                  className="bg-black/60 border-2 border-white/5 rounded-2xl px-6 py-3 text-[10px] font-mono font-black uppercase tracking-widest outline-none focus:border-primary/50 appearance-none cursor-pointer pr-10"
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+              >
+                  {Object.keys(problem.codeSnippets || {}).map((lang) => (
+                      <option key={lang} value={lang} className="bg-[#080808]">{lang.toUpperCase()}</option>
+                  ))}
+              </select>
+              <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 rotate-90 text-slate-600 pointer-events-none" size={14} />
+            </div>
+
             <button 
               onClick={() => setIsBookmarked(!isBookmarked)} 
-              className={`p-2 rounded-xl border border-white/10 transition-all ${isBookmarked ? 'text-primary bg-primary/10 border-primary/30' : 'hover:bg-white/5'}`}
+              className={`p-3 rounded-2xl border-2 transition-all ${isBookmarked ? 'text-primary bg-primary/10 border-primary/40 shadow-[0_0_15px_rgba(var(--p),0.2)]' : 'border-white/5 hover:border-white/20 bg-white/5'}`}
             >
-              <Bookmark size={18} fill={isBookmarked ? "currentColor" : "none"} />
+              <Bookmark size={20} strokeWidth={2.5} fill={isBookmarked ? "currentColor" : "none"} />
             </button>
-            <button className="p-2 rounded-xl border border-white/10 hover:bg-white/5 text-slate-400 hover:text-white transition-colors">
-              <Share2 size={18}/>
+            <button className="p-3 rounded-2xl border-2 border-white/5 hover:border-white/20 bg-white/5 text-slate-400 hover:text-white transition-all">
+              <Share2 size={20} strokeWidth={2.5} />
             </button>
           </div>
       </div>
 
-      {/* 2. Main Workspace Panes */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[40%_60%] gap-6 min-h-0 overflow-hidden">
+      {/* 2. Workspace Panes */}
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-[38%_62%] gap-6 min-h-0 overflow-hidden">
         
-        {/* LEFT PANEL: Description & Tabs */}
-        <div className="flex flex-col bg-white/[0.02] border border-white/5 rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <div className="flex bg-black/20 p-1.5 gap-1 border-b border-white/5 shrink-0">
+        {/* LEFT PANEL: Module Logic & Telemetry */}
+        <div className="flex flex-col bg-white/[0.01] border-2 border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
+            <div className="flex bg-black/60 p-2 gap-2 border-b-2 border-white/5 shrink-0">
                 {["description", "submissions", "discussion", "hints"].map((tab) => (
                     <button
                         key={tab}
                         onClick={() => setActiveTab(tab)}
-                        className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                            activeTab === tab ? "bg-white/10 text-white shadow-lg" : "text-slate-500 hover:text-slate-300"
+                        className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-xl text-[10px] font-mono font-black uppercase tracking-widest transition-all ${
+                            activeTab === tab ? "bg-white/5 text-primary border border-primary/20 shadow-inner" : "text-slate-600 hover:text-slate-300"
                         }`}
                     >
                         {tab === "description" && <FileText size={14}/>}
                         {tab === "submissions" && <Code2 size={14}/>}
-                        {tab}
+                        {tab.replace('description', 'LOGIC')}
                     </button>
                 ))}
             </div>
-            <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+            
+            <div className="flex-1 overflow-y-auto p-10 custom-scrollbar">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={activeTab}
@@ -170,35 +179,54 @@ const ProblemPage = () => {
                         transition={{ duration: 0.2 }}
                     >
                         {activeTab === "description" && (
-                            <div className="space-y-8">
-                                <p className="text-slate-300 leading-relaxed text-lg">{problem.description}</p>
+                            <div className="space-y-12">
+                                <p className="text-slate-300 leading-relaxed text-lg font-medium border-l-2 border-primary/20 pl-6 uppercase tracking-tight">
+                                  {problem.description}
+                                </p>
+
                                 {Object.entries(problem.examples || {}).map(([key, ex], i) => (
                                     <div key={i} className="space-y-4">
-                                        <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
-                                            <Zap size={14} /> Example_{i + 1}
-                                        </h4>
-                                        <div className="bg-black/40 border border-white/5 rounded-2xl p-6 font-mono text-sm space-y-3">
-                                            <div><span className="text-slate-500 font-bold mr-2 uppercase text-[10px]">Input:</span> <span className="text-blue-400">{ex.input}</span></div>
-                                            <div><span className="text-slate-500 font-bold mr-2 uppercase text-[10px]">Output:</span> <span className="text-emerald-400">{ex.output}</span></div>
-                                            {ex.explanation && <div><span className="text-slate-500 font-bold mr-2 uppercase block mb-1 text-[10px]">Explanation:</span> <span className="text-slate-400 italic text-xs">{ex.explanation}</span></div>}
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-px w-8 bg-primary/40" />
+                                            <h4 className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-primary">
+                                              EXAMPLE_NODE_{i + 1}
+                                            </h4>
+                                        </div>
+                                        <div className="bg-[#080808] border-2 border-white/5 rounded-[1.5rem] p-8 font-mono text-sm space-y-4 shadow-inner">
+                                            <div>
+                                              <span className="text-slate-600 font-black mr-4 uppercase text-[9px] tracking-widest">INPUT_STREAM:</span> 
+                                              <span className="text-blue-400 font-bold">{ex.input}</span>
+                                            </div>
+                                            <div>
+                                              <span className="text-slate-600 font-black mr-4 uppercase text-[9px] tracking-widest">OUTPUT_TARGET:</span> 
+                                              <span className="text-emerald-400 font-bold">{ex.output}</span>
+                                            </div>
+                                            {ex.explanation && (
+                                              <div className="pt-4 border-t border-white/5">
+                                                <span className="text-slate-600 font-black block mb-2 uppercase text-[9px] tracking-widest">LOGIC_EXPLANATION:</span> 
+                                                <span className="text-slate-400 text-xs leading-relaxed uppercase">{ex.explanation}</span>
+                                              </div>
+                                            )}
                                         </div>
                                     </div>
                                 ))}
+
                                 {problem.constraints && (
-                                    <div className="pt-6 border-t border-white/5">
-                                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">Constraints</h4>
-                                        <code className="block bg-white/5 p-4 rounded-xl text-amber-200/70 text-sm italic border border-white/5">
-                                            {problem.constraints}
-                                        </code>
+                                    <div className="pt-10 border-t-2 border-white/5">
+                                        <h4 className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-600 mb-6">PHYSICAL_CONSTRAINTS</h4>
+                                        <div className="bg-amber-500/5 border-2 border-amber-500/10 p-6 rounded-2xl font-mono text-sm text-amber-200/60 leading-none">
+                                          {problem.constraints}
+                                        </div>
                                     </div>
                                 )}
                             </div>
                         )}
                         {activeTab === "submissions" && <SubmissionsList submissions={submissions} isLoading={isSubmissionsLoading} />}
-                        {activeTab === "discussion" && <div className="text-center py-20 text-slate-500 italic uppercase text-[10px] font-black tracking-widest">Feed_Silent. No logs found.</div>}
+                        {activeTab === "discussion" && <div className="text-center py-32 text-slate-800 font-mono text-[10px] font-black uppercase tracking-[0.8em]">SIGNAL_VOID // NO_LOGS_FOUND</div>}
                         {activeTab === "hints" && (
-                            <div className="bg-primary/5 border border-primary/20 p-6 rounded-2xl italic text-primary/80 leading-relaxed text-sm">
-                                {problem.hints || "No hints encrypted for this module."}
+                            <div className="bg-primary/5 border-2 border-primary/10 p-8 rounded-[1.5rem] font-mono text-primary/70 leading-relaxed text-sm uppercase">
+                                <Terminal size={20} className="mb-4 opacity-50" />
+                                {problem.hints || "ENCRYPTION_ACTIVE: NO_HINTS_AVAILABLE_FOR_MODULE"}
                             </div>
                         )}
                     </motion.div>
@@ -206,33 +234,36 @@ const ProblemPage = () => {
             </div>
         </div>
 
-        {/* RIGHT PANEL: Editor & Terminal */}
+        {/* RIGHT PANEL: Logic_Editor & Execution_Telemetry */}
         <div className="flex flex-col gap-6 overflow-hidden min-h-0">
-          {/* Editor */}
-          <div className="flex-[1.5] bg-[#0d0d0d] border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl relative">
-             <div className="bg-black/40 px-6 py-3 border-b border-white/5 flex items-center justify-between shrink-0">
-                <div className="flex items-center gap-2">
-                    <Terminal size={14} className="text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest opacity-50">Source_Buffer</span>
+          
+          {/* Main IDE Chassis */}
+          <div className="flex-[1.6] bg-[#080808] border-2 border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col shadow-[0_0_80px_rgba(0,0,0,0.5)] relative">
+             <div className="bg-black/60 px-8 py-4 border-b-2 border-white/5 flex items-center justify-between shrink-0">
+                <div className="flex items-center gap-4">
+                    <Terminal size={16} strokeWidth={3} className="text-primary" />
+                    <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500">Source_Buffer_V4.0</span>
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-6">
                     <button 
                         onClick={handleRunCode} 
                         disabled={isExecuting} 
-                        className="text-[10px] font-black uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2 disabled:opacity-30"
+                        className="text-[11px] font-mono font-black uppercase tracking-widest hover:text-primary transition-all flex items-center gap-2 disabled:opacity-30"
                     >
-                        {isExecuting ? <Loader2 size={12} className="animate-spin"/> : <Play size={12}/>} Run_Code
+                        {isExecuting ? <Loader2 size={14} className="animate-spin"/> : <Play size={14} strokeWidth={3}/>} 
+                        Execute_Log
                     </button>
                     <button 
                         onClick={handleSubmitSolution} 
                         disabled={isExecuting} 
-                        className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80 transition-colors flex items-center gap-2 disabled:opacity-30"
+                        className="text-[11px] font-mono font-black uppercase tracking-widest text-primary hover:text-white transition-all flex items-center gap-2 disabled:opacity-30"
                     >
-                        <Zap size={12}/> Submit_Module
+                        <Zap size={14} strokeWidth={3}/> 
+                        Finalize_Module
                     </button>
                 </div>
              </div>
-             <div className="flex-1 min-h-0">
+             <div className="flex-1 min-h-0 bg-[#080808]">
                 <Editor
                     height="100%"
                     language={selectedLanguage.toLowerCase()}
@@ -242,39 +273,42 @@ const ProblemPage = () => {
                     options={{
                         minimap: { enabled: false },
                         fontSize: 15,
-                        fontFamily: "JetBrains Mono, monospace",
+                        fontFamily: "'JetBrains Mono', monospace",
                         lineNumbers: 'on',
-                        padding: { top: 20 },
+                        padding: { top: 24 },
                         smoothScrolling: true,
-                        cursorBlinking: "expand",
+                        cursorBlinking: "solid",
                         scrollbar: { vertical: 'hidden', horizontal: 'hidden' },
-                        automaticLayout: true
+                        automaticLayout: true,
+                        renderLineHighlight: "all",
+                        fontLigatures: true
                     }}
                 />
              </div>
           </div>
 
-          {/* Terminal / Result */}
-          <div className="flex-1 bg-black/40 border border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl min-h-0">
-             <div className="bg-black/20 px-6 py-3 border-b border-white/5 text-[10px] font-black uppercase tracking-widest text-slate-500 shrink-0">
-                Execution_Telemetry
+          {/* Terminal Feedback Chassis */}
+          <div className="flex-1 bg-black/40 border-2 border-white/5 rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl min-h-0">
+             <div className="bg-black/60 px-8 py-3 border-b-2 border-white/5 text-[10px] font-mono font-black uppercase tracking-[0.6em] text-slate-600 shrink-0">
+                Execution_Telemetry // Node_Active
              </div>
-             <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+             <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
                 {submission ? (
                   <Submission submission={submission} />
                 ) : (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-600">Pre_Defined_Test_Nodes</h4>
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4">
+                        <div className="h-px w-6 bg-slate-800" />
+                        <h4 className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-700">Pre_Defined_Validation_Nodes</h4>
                     </div>
-                    <div className="grid gap-3">
+                    <div className="grid gap-4">
                       {testCases.map((tc, i) => (
-                        <div key={i} className="flex items-center justify-between p-4 bg-white/[0.03] border border-white/5 rounded-2xl group hover:border-primary/20 transition-all">
-                           <div className="flex gap-8">
-                             <div><span className="text-[8px] font-black uppercase opacity-30 block mb-1">In_Stream</span> <code className="text-xs text-blue-300 font-mono">{tc.input}</code></div>
-                             <div><span className="text-[8px] font-black uppercase opacity-30 block mb-1">Out_Target</span> <code className="text-xs text-emerald-300 font-mono">{tc.output}</code></div>
+                        <div key={i} className="flex items-center justify-between p-6 bg-white/[0.02] border-2 border-white/5 rounded-2xl group hover:border-primary/20 transition-all shadow-inner">
+                           <div className="flex gap-12">
+                             <div><span className="text-[8px] font-mono font-black uppercase text-slate-700 block mb-2 tracking-widest">In_Stream</span> <code className="text-sm text-blue-400 font-mono font-bold">{tc.input}</code></div>
+                             <div><span className="text-[8px] font-mono font-black uppercase text-slate-700 block mb-2 tracking-widest">Expected_Return</span> <code className="text-sm text-emerald-400 font-mono font-bold">{tc.output}</code></div>
                            </div>
-                           <Circle size={10} className="text-slate-800" />
+                           <Circle size={12} strokeWidth={3} className="text-slate-800 group-hover:text-primary transition-colors" />
                         </div>
                       ))}
                     </div>

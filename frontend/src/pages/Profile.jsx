@@ -52,173 +52,205 @@ const Profile = () => {
   }, [authUser, solvedProblems, playlists, submissions]);
 
   const statsConfig = [
-    { label: "Solved", value: statistics.problemsSolved, icon: CheckCircle2, color: "text-emerald-400" },
-    { label: "Submissions", value: statistics.totalSubmissions, icon: Code2, color: "text-blue-400" },
-    { label: "Playlists", value: statistics.playlistsCreated, icon: BookOpen, color: "text-purple-400" },
-    { label: "Accuracy", value: `${statistics.successRate}%`, icon: ThumbsUp, color: "text-amber-400" },
+    { label: "SOLVED", value: statistics.problemsSolved, icon: CheckCircle2, color: "text-emerald-400" },
+    { label: "SUBMISSIONS", value: statistics.totalSubmissions, icon: Code2, color: "text-blue-400" },
+    { label: "PLAYLISTS", value: statistics.playlistsCreated, icon: BookOpen, color: "text-purple-400" },
+    { label: "ACCURACY", value: `${statistics.successRate}%`, icon: ThumbsUp, color: "text-amber-400" },
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white py-12 px-4">
-      {/* 1. Page Header */}
-      <div className="max-w-6xl mx-auto mb-12 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="p-3 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
-            <ArrowLeft className="group-hover:-translate-x-1 transition-transform" />
+    <div className="min-h-screen bg-[#050505] text-white py-12 px-6 font-primary">
+      {/* 1. Page Header: Straight & Heavy */}
+      <div className="max-w-7xl mx-auto mb-16 flex items-center justify-between border-b-2 border-white/5 pb-10">
+        <div className="flex items-center gap-8">
+          <Link to="/" className="p-4 bg-white/5 border-2 border-white/5 rounded-2xl hover:border-primary/40 transition-all group">
+            <ArrowLeft className="group-hover:-translate-x-1 transition-transform" strokeWidth={3} />
           </Link>
-          <div>
-            <h1 className="text-4xl font-black italic uppercase tracking-tighter">Identity.</h1>
-            <p className="text-slate-500 text-xs font-bold tracking-[0.2em] uppercase mt-1">User_Profile_Buffer</p>
+          <div className="space-y-1">
+            <h1 className="text-5xl font-black uppercase font-display tracking-tight leading-none">
+              IDENTITY<span className="text-primary">.</span>
+            </h1>
+            <p className="text-slate-600 font-mono text-[10px] font-black tracking-[0.5em] uppercase">
+              SECTOR: USER_PROFILE_BUFFER // 0xAF42
+            </p>
           </div>
         </div>
-        <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/5 border border-primary/20 rounded-full">
-            <Activity size={14} className="text-primary animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-primary">System Active</span>
+        <div className="hidden md:flex items-center gap-4 px-6 py-2.5 bg-primary/5 border-2 border-primary/20 rounded-full shadow-[0_0_20px_rgba(var(--p),0.1)]">
+            <Activity size={16} strokeWidth={3} className="text-primary animate-pulse" />
+            <span className="text-[10px] font-mono font-black uppercase tracking-[0.3em] text-primary">System_Active</span>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[350px_1fr] gap-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-12">
         
-        {/* 2. Left Sidebar: Personal Info */}
+        {/* 2. Left Sidebar: Biometric Interface */}
         <div className="space-y-6">
-          <div className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] p-8 backdrop-blur-md sticky top-28">
-            <div className="flex flex-col items-center text-center">
-              <div className="relative group mb-6">
-                <div className="absolute inset-0 bg-primary/20 blur-2xl rounded-full group-hover:bg-primary/40 transition-all" />
-                <div className="relative size-32 rounded-full border-2 border-primary p-1">
-                    <div className="w-full h-full rounded-full bg-neutral overflow-hidden flex items-center justify-center">
+          <div className="bg-[#080808] border-2 border-white/5 rounded-[2.5rem] p-10 backdrop-blur-md sticky top-28 shadow-2xl overflow-hidden">
+            {/* Background Texture */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#fff 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+            
+            <div className="relative flex flex-col items-center text-center z-10">
+              <div className="relative group mb-8">
+                {/* Scanner Glow */}
+                <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full group-hover:bg-primary/20 transition-all" />
+                <div className="relative size-40 rounded-full border-4 border-primary p-2 shadow-[0_0_30px_rgba(var(--p),0.2)]">
+                    <div className="w-full h-full rounded-full bg-neutral-900 overflow-hidden flex items-center justify-center border-2 border-white/10">
                         {authUser?.image ? (
-                            <img src={authUser.image} alt="User" className="w-full h-full object-cover" />
+                            <img src={authUser.image} alt="User" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" />
                         ) : (
-                            <span className="text-4xl font-black">{authUser?.name?.charAt(0).toUpperCase()}</span>
+                            <span className="text-5xl font-black font-display text-primary">{authUser?.name?.charAt(0).toUpperCase()}</span>
                         )}
                     </div>
+                    {/* Biometric Corner Accents */}
+                    <div className="absolute top-0 right-0 size-4 border-t-2 border-r-2 border-white/40" />
+                    <div className="absolute bottom-0 left-0 size-4 border-b-2 border-l-2 border-white/40" />
                 </div>
                 <button 
                   onClick={() => setIsEditModalOpen(true)}
-                  className="absolute bottom-0 right-0 p-2 bg-primary text-black rounded-xl shadow-lg hover:scale-110 transition-transform"
+                  className="absolute bottom-2 right-2 p-3 bg-primary text-black rounded-2xl shadow-2xl hover:scale-110 active:scale-90 transition-all border-2 border-black/20"
                 >
-                  <Edit3 size={16} />
+                  <Edit3 size={18} strokeWidth={3} />
                 </button>
               </div>
 
-              <h2 className="text-2xl font-black tracking-tight italic uppercase">{authUser?.name || "Anonymous"}</h2>
-              <div className="mt-2 px-3 py-1 bg-white/5 border border-white/10 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-400">
-                {authUser?.role || "USER"}
+              <h2 className="text-3xl font-black tracking-tight uppercase font-display text-white leading-none">
+                {authUser?.name || "ANONYMOUS_UNIT"}
+              </h2>
+              <div className="mt-4 px-4 py-1.5 bg-white/[0.03] border-2 border-white/5 rounded-xl text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500">
+                AUTH_ROLE: {authUser?.role || "USER"}
               </div>
 
-              <div className="w-full space-y-4 mt-10">
-                <div className="flex items-center gap-4 p-4 bg-black/40 rounded-2xl border border-white/5">
-                   <Mail className="text-primary" size={20} />
+              <div className="w-full space-y-4 mt-12">
+                <div className="flex items-center gap-5 p-5 bg-black/40 rounded-2xl border-2 border-white/5 group hover:border-primary/20 transition-colors">
+                   <div className="p-2 bg-primary/5 rounded-lg border border-primary/10">
+                    <Mail className="text-primary" size={20} strokeWidth={2.5} />
+                   </div>
                    <div className="text-left">
-                      <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Email_Endpoint</p>
-                      <p className="text-xs font-bold truncate max-w-[180px]">{authUser?.email}</p>
+                      <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest leading-none mb-1">Email_Endpoint</p>
+                      <p className="text-xs font-bold font-mono truncate max-w-[200px] text-slate-300">{authUser?.email}</p>
                    </div>
                 </div>
-                <div className="flex items-center gap-4 p-4 bg-black/40 rounded-2xl border border-white/5">
-                   <Shield className="text-primary" size={20} />
+                <div className="flex items-center gap-5 p-5 bg-black/40 rounded-2xl border-2 border-white/5 group hover:border-primary/20 transition-colors">
+                   <div className="p-2 bg-primary/5 rounded-lg border border-primary/10">
+                    <Shield className="text-primary" size={20} strokeWidth={2.5} />
+                   </div>
                    <div className="text-left">
-                      <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Access_Level</p>
-                      <p className="text-xs font-bold uppercase">{authUser?.role === "ADMIN" ? "Restricted Root" : "Standard Operator"}</p>
+                      <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest leading-none mb-1">Clearance_Level</p>
+                      <p className="text-xs font-bold font-mono uppercase text-slate-300">
+                        {authUser?.role === "ADMIN" ? "RESTRICTED_ROOT" : "STANDARD_OPERATIVE"}
+                      </p>
                    </div>
                 </div>
               </div>
 
-              <button className="w-full mt-6 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                <Lock size={14} /> Change Access Keys
+              <button className="w-full mt-8 py-5 bg-white/[0.03] border-2 border-white/5 rounded-2xl text-[10px] font-mono font-black uppercase tracking-[0.3em] text-slate-400 hover:bg-white/[0.06] hover:text-white transition-all flex items-center justify-center gap-3">
+                <Lock size={16} strokeWidth={3} /> CHANGE_ACCESS_KEYS
               </button>
             </div>
           </div>
         </div>
 
-        {/* 3. Main Content: Stats & Submissions */}
-        <div className="space-y-8">
+        {/* 3. Main Content: Hardware Telemetry */}
+        <div className="space-y-12">
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {statsConfig.map((stat, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white/[0.02] border border-white/5 p-6 rounded-3xl backdrop-blur-sm group hover:border-primary/30 transition-all"
+                className="bg-white/[0.02] border-2 border-white/5 p-8 rounded-[2rem] backdrop-blur-md group hover:border-primary/40 transition-all shadow-xl"
               >
-                <stat.icon className={`${stat.color} mb-3 group-hover:scale-110 transition-transform`} size={20} />
-                <div className="text-3xl font-black italic tracking-tighter">
+                <stat.icon className={`${stat.color} mb-4 group-hover:scale-125 transition-transform`} size={24} strokeWidth={2.5} />
+                <div className="text-4xl font-black font-display tracking-tight text-white leading-none">
                   {isLoadingStats ? "..." : stat.value}
                 </div>
-                <div className="text-[9px] font-black text-slate-500 uppercase tracking-widest mt-1">
+                <div className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mt-3">
                   {stat.label}
                 </div>
               </motion.div>
             ))}
           </div>
 
-          {/* Sub-Components Sections */}
-          <div className="space-y-12 pt-4">
-            <section>
-                <div className="flex items-center gap-4 mb-6">
-                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Submissions_Log</h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+          {/* Activity Sections */}
+          <div className="space-y-20 pt-4">
+            <section className="relative">
+                <div className="flex items-center gap-6 mb-10">
+                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">SUBMISSIONS_LOG</h3>
+                    <div className="h-px flex-1 bg-white/5" />
                 </div>
-                <ProfileSubmission />
+                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
+                  <ProfileSubmission />
+                </div>
             </section>
 
-            <section>
-                <div className="flex items-center gap-4 mb-6">
-                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Solved_Modules</h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+            <section className="relative">
+                <div className="flex items-center gap-6 mb-10">
+                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">SOLVED_MODULES</h3>
+                    <div className="h-px flex-1 bg-white/5" />
                 </div>
-                <ProblemSolvedByUser />
+                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
+                  <ProblemSolvedByUser />
+                </div>
             </section>
 
-            <section>
-                <div className="flex items-center gap-4 mb-6">
-                    <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Collections</h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+            <section className="relative">
+                <div className="flex items-center gap-6 mb-10">
+                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">COLLECTIONS</h3>
+                    <div className="h-px flex-1 bg-white/5" />
                 </div>
-                <PlaylistProfile />
+                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
+                  <PlaylistProfile />
+                </div>
             </section>
           </div>
         </div>
       </div>
 
-      {/* 4. Edit Modal - Themed */}
+      {/* 4. Edit Modal: Hardened Interface */}
       <AnimatePresence>
         {isEditModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsEditModalOpen(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
+              className="absolute inset-0 bg-black/90 backdrop-blur-md" 
             />
             <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-              className="relative bg-[#121212] border border-white/10 w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl"
+              initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="relative bg-[#080808] border-2 border-white/10 w-full max-w-md rounded-[2rem] p-12 shadow-[0_0_80px_rgba(0,0,0,1)] overflow-hidden"
             >
-              <h3 className="text-2xl font-black italic uppercase tracking-tighter mb-8">Patch_Profile</h3>
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Handle</label>
+              {/* Hardware Accent */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary" />
+              
+              <h3 className="text-3xl font-black uppercase font-display tracking-tight mb-10 text-white">PATCH_PROFILE</h3>
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">HANDLE_ID</label>
                   <input
                     type="text"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:border-primary outline-none transition-all"
+                    className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 font-mono text-sm focus:border-primary/50 outline-none transition-all text-white font-bold"
                     value={editForm.name}
                     onChange={(e) => setEditForm({...editForm, name: e.target.value})}
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Visual_Path (URL)</label>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">VISUAL_PATH_URL</label>
                   <input
                     type="url"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl p-4 focus:border-primary outline-none transition-all"
+                    className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 font-mono text-sm focus:border-primary/50 outline-none transition-all text-white font-bold"
                     value={editForm.image}
                     onChange={(e) => setEditForm({...editForm, image: e.target.value})}
                   />
                 </div>
-                <div className="flex gap-4 pt-4">
-                  <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-slate-500">Abort</button>
-                  <button className="flex-[2] py-4 bg-primary text-black rounded-xl text-[10px] font-black uppercase tracking-widest" onClick={() => setIsEditModalOpen(false)}>Save Changes</button>
+                <div className="flex gap-6 pt-6">
+                  <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-4 text-[11px] font-mono font-black uppercase tracking-widest text-slate-600 hover:text-rose-500 transition-colors">
+                    ABORT
+                  </button>
+                  <button className="flex-[2] py-4 bg-primary text-black rounded-2xl text-[11px] font-mono font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all" onClick={() => setIsEditModalOpen(false)}>
+                    APPLY_PATCH
+                  </button>
                 </div>
               </div>
             </motion.div>

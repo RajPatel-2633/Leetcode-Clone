@@ -601,71 +601,77 @@ const navigation = useNavigate();
   };
 
   return (
-    <div className="w-full space-y-12">
+    <div className="w-full space-y-12 pb-20">
       {/* 1. Header & Utility Actions */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/5 pb-8">
-        <div className="flex items-center gap-4">
-          <div className="p-3 bg-primary/10 rounded-2xl text-primary shadow-[0_0_15px_rgba(var(--p),0.2)]">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/5 pb-10">
+        <div className="flex items-center gap-5">
+          <div className="p-4 bg-primary/10 rounded-2xl text-primary border border-primary/20 shadow-[0_0_20px_rgba(var(--p),0.2)]">
             <FileText size={32} />
           </div>
           <div>
-            <h2 className="text-3xl font-black italic uppercase tracking-tighter">Initialize_Module</h2>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Add New Problem to Lab Database</p>
+            <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
+              Initialize_Module
+            </h2>
+            <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em] mt-2">
+              Sector: Database_Input // New_Record
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="bg-white/5 p-1 rounded-xl border border-white/10 flex gap-1">
-            {["DP", "string"].map((type) => (
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="bg-white/5 p-1.5 rounded-2xl border border-white/10 flex gap-1 backdrop-blur-md">
+            {["DP", "STRING"].map((type) => (
               <button
                 key={type}
                 type="button"
-                onClick={() => setSampleType(type === "DP" ? "array" : "string")} // Preserved your logic
-                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${
-                  sampleType === type ? "bg-primary text-black" : "text-slate-500 hover:text-white"
+                onClick={() => setSampleType(type.toLowerCase() === "dp" ? "array" : "string")}
+                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  sampleType === (type.toLowerCase() === "dp" ? "array" : "string") 
+                    ? "bg-primary text-black shadow-[0_0_15px_rgba(var(--p),0.4)]" 
+                    : "text-slate-500 hover:text-white"
                 }`}
               >
-                {type} Template
+                {type}_Template
               </button>
             ))}
           </div>
           <button
             type="button"
             onClick={loadSampleData}
-            className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+            className="flex items-center gap-2 px-6 py-3.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all"
           >
-            <Download size={14} />
+            <Download size={14} className="text-primary" />
             Load_Buffer
           </button>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-16">
         
         {/* SECTION A: IDENTITY & PARAMETERS */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           <div className="flex items-center gap-4">
-             <span className="size-2 rounded-full bg-primary animate-pulse" />
-             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Sector_01: Identity</h3>
+             <div className="h-px w-10 bg-primary" />
+             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Sector_01: Identity_Manifest</h3>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2 space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Module Title</label>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2 space-y-3">
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Module_Title</label>
               <input
                 type="text"
                 {...register("title")}
-                className={`w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:border-primary/50 outline-none transition-all font-bold ${errors.title ? "border-red-500/50" : ""}`}
-                placeholder="Enter problem title..."
+                className={`w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 focus:border-primary/50 outline-none transition-all font-bold font-mono text-sm ${errors.title ? "border-rose-500/50" : ""}`}
+                placeholder="INPUT_TITLE_HERE..."
               />
-              {errors.title && <p className="text-red-500 text-[10px] font-bold mt-1 ml-2">{errors.title.message}</p>}
+              {errors.title && <p className="text-rose-500 text-[10px] font-black mt-1 ml-2 uppercase tracking-tighter">{errors.title.message}</p>}
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Difficulty_Rating</label>
+            <div className="space-y-3">
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Difficulty_Rating</label>
               <select
                 {...register("difficulty")}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 focus:border-primary/50 outline-none appearance-none font-bold text-primary"
+                className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 focus:border-primary/50 outline-none appearance-none font-black text-primary font-mono tracking-widest"
               >
                 <option value="EASY">EASY</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -673,35 +679,34 @@ const navigation = useNavigate();
               </select>
             </div>
 
-            <div className="md:col-span-3 space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">Description_Payload</label>
+            <div className="md:col-span-3 space-y-3">
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Description_Payload</label>
               <textarea
                 {...register("description")}
-                className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 focus:border-primary/50 outline-none min-h-[200px] resize-none font-medium leading-relaxed transition-all"
-                placeholder="Detailed problem logic here..."
+                className="w-full bg-white/[0.03] border-2 border-white/5 rounded-[2rem] p-8 focus:border-primary/50 outline-none min-h-[250px] resize-none font-medium leading-relaxed transition-all"
+                placeholder="LOAD_DESCRIPTION_LOGIC..."
               />
-              {errors.description && <p className="text-red-500 text-[10px] font-bold mt-1 ml-2">{errors.description.message}</p>}
             </div>
           </div>
         </div>
 
         {/* SECTION B: CLASSIFICATION (TAGS) */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-               <span className="size-2 rounded-full bg-blue-500 animate-pulse" />
-               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Sector_02: Classification</h3>
+                <div className="h-px w-10 bg-blue-500" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Sector_02: Classification</h3>
             </div>
             <button
               type="button"
               onClick={() => appendTag("")}
-              className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline"
+              className="text-[10px] font-black uppercase tracking-[0.2em] text-primary hover:text-white transition-colors"
             >
-              + Add_Tag
+              [ + Add_Tag ]
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {tagFields.map((field, index) => (
               <motion.div 
                 key={field.id} 
@@ -711,16 +716,16 @@ const navigation = useNavigate();
                 <input
                   type="text"
                   {...register(`tags.${index}`)}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-3 text-xs font-bold focus:border-primary/50 outline-none transition-all pr-8"
-                  placeholder="Tag..."
+                  className="w-full bg-white/[0.03] border-2 border-white/5 rounded-xl py-3 px-4 text-[10px] font-black uppercase tracking-widest focus:border-primary/50 outline-none transition-all pr-10"
+                  placeholder="TAG_ID"
                 />
                 <button
                   type="button"
                   onClick={() => removeTag(index)}
                   disabled={tagFields.length === 1}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-600 hover:text-red-400 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-rose-500 transition-colors"
                 >
-                  <Trash2 size={12} />
+                  <Trash2 size={14} />
                 </button>
               </motion.div>
             ))}
@@ -728,43 +733,43 @@ const navigation = useNavigate();
         </div>
 
         {/* SECTION C: VALIDATION (TEST CASES) */}
-        <div className="space-y-6">
+        <div className="space-y-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-               <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-               <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Sector_03: Validation_Nodes</h3>
+                <div className="h-px w-10 bg-emerald-500" />
+                <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Sector_03: Validation_Nodes</h3>
             </div>
             <button
               type="button"
               onClick={() => appendTestCase({ input: "", output: "" })}
-              className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-primary/20 transition-all"
+              className="flex items-center gap-3 px-6 py-3 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all"
             >
-              <Plus size={12} /> New_Node
+              <Plus size={14} /> New_Validation_Node
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <AnimatePresence mode="popLayout">
               {testCaseFields.map((field, index) => (
                 <motion.div
                   key={field.id}
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.9 }}
-                  className="bg-black/40 border border-white/5 rounded-3xl p-6 space-y-4 relative overflow-hidden group"
+                  className="bg-black/40 border-2 border-white/5 rounded-[2rem] p-8 space-y-6 relative overflow-hidden group hover:border-emerald-500/20 transition-colors"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">NODE_{index + 1}</span>
-                    <button type="button" onClick={() => removeTestCase(index)} disabled={testCaseFields.length === 1} className="text-slate-600 hover:text-red-400 transition-colors">
-                      <Trash2 size={14} />
+                    <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600">NODE_{index + 1} // BUFFER</span>
+                    <button type="button" onClick={() => removeTestCase(index)} disabled={testCaseFields.length === 1} className="text-slate-600 hover:text-rose-500 transition-colors">
+                      <Trash2 size={16} />
                     </button>
                   </div>
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                        <label className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">Input_Stream</label>
-                        <textarea {...register(`testCases.${index}.input`)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-mono outline-none focus:border-blue-500/50 min-h-[80px] resize-none" />
+                  <div className="space-y-5">
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest ml-1">Input_Stream</label>
+                        <textarea {...register(`testCases.${index}.input`)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-mono outline-none focus:border-blue-500/50 min-h-[100px] resize-none" />
                     </div>
-                    <div className="space-y-1">
-                        <label className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">Expected_Return</label>
-                        <textarea {...register(`testCases.${index}.output`)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs font-mono outline-none focus:border-emerald-500/50 min-h-[80px] resize-none" />
+                    <div className="space-y-2">
+                        <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest ml-1">Expected_Return</label>
+                        <textarea {...register(`testCases.${index}.output`)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-mono outline-none focus:border-emerald-500/50 min-h-[100px] resize-none" />
                     </div>
                   </div>
                 </motion.div>
@@ -773,30 +778,36 @@ const navigation = useNavigate();
           </div>
         </div>
 
-        {/* SECTION D: SOURCE TEMPLATES */}
-        <div className="space-y-8">
+        {/* SECTION D: SOURCE TEMPLATES (JAVASCRIPT, PYTHON, JAVA) */}
+        {/* Note: Ensure language names match the style of headers */}
+        <div className="space-y-10">
           <div className="flex items-center gap-4">
-             <span className="size-2 rounded-full bg-purple-500 animate-pulse" />
-             <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Sector_04: Source_Templates</h3>
+             <div className="h-px w-10 bg-purple-500" />
+             <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400">Sector_04: Source_Templates</h3>
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-16">
             {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
-              <div key={language} className="bg-white/[0.02] border border-white/5 rounded-[2.5rem] overflow-hidden">
-                <div className="bg-black/40 px-8 py-4 border-b border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Code2 className="text-primary" size={18} />
-                    <span className="font-black italic uppercase tracking-tighter text-xl">{language}</span>
+              <div key={language} className="bg-white/[0.02] border border-white/5 rounded-[3rem] overflow-hidden shadow-2xl">
+                <div className="bg-black/60 px-10 py-6 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <Code2 className="text-primary" size={20} />
+                    <span className="font-display font-black uppercase tracking-tight text-2xl text-white">{language}</span>
+                  </div>
+                  <div className="px-4 py-1.5 rounded-full border border-white/10 text-[8px] font-mono font-black text-slate-500 uppercase tracking-widest">
+                    Source_Template_Type: {language}
                   </div>
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   {/* Starter Code */}
-                  <div className="p-8 border-r border-white/5 space-y-4">
-                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
-                      <Terminal size={12}/> Starter_Code
-                    </h4>
-                    <div className="border border-white/10 rounded-2xl overflow-hidden h-[300px]">
+                  <div className="p-10 border-r border-white/5 space-y-6">
+                    <div className="flex items-center justify-between">
+                        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                          <Terminal size={14}/> Starter_Code
+                        </h4>
+                    </div>
+                    <div className="border-2 border-white/5 rounded-3xl overflow-hidden h-[350px] shadow-inner">
                       <Controller
                         name={`codeSnippets.${language}`}
                         control={control}
@@ -807,7 +818,7 @@ const navigation = useNavigate();
                             theme="vs-dark"
                             value={field.value}
                             onChange={field.onChange}
-                            options={{ minimap: { enabled: false }, fontSize: 13, padding: {top: 10} }}
+                            options={{ minimap: { enabled: false }, fontSize: 13, padding: {top: 20}, fontFamily: 'JetBrains Mono' }}
                           />
                         )}
                       />
@@ -815,11 +826,11 @@ const navigation = useNavigate();
                   </div>
 
                   {/* Reference Solution */}
-                  <div className="p-8 space-y-4 bg-primary/5">
-                    <h4 className="text-[10px] font-black text-primary uppercase tracking-widest flex items-center gap-2">
-                      <CheckCircle2 size={12}/> Reference_Solution
+                  <div className="p-10 space-y-6 bg-primary/[0.02]">
+                    <h4 className="text-[10px] font-black text-primary uppercase tracking-[0.3em] flex items-center gap-2">
+                      <CheckCircle2 size={14}/> Reference_Solution
                     </h4>
-                    <div className="border border-primary/20 rounded-2xl overflow-hidden h-[300px]">
+                    <div className="border-2 border-primary/10 rounded-3xl overflow-hidden h-[350px]">
                       <Controller
                         name={`referenceSolutions.${language}`}
                         control={control}
@@ -830,67 +841,30 @@ const navigation = useNavigate();
                             theme="vs-dark"
                             value={field.value}
                             onChange={field.onChange}
-                            options={{ minimap: { enabled: false }, fontSize: 13, padding: {top: 10} }}
+                            options={{ minimap: { enabled: false }, fontSize: 13, padding: {top: 20}, fontFamily: 'JetBrains Mono' }}
                           />
                         )}
                       />
                     </div>
                   </div>
                 </div>
-                
-                {/* Language Specific Examples */}
-                <div className="p-8 bg-black/20 border-t border-white/5">
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="space-y-1">
-                        <label className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">Example_In</label>
-                        <textarea {...register(`examples.${language}.input`)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none min-h-[60px]" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">Example_Out</label>
-                        <textarea {...register(`examples.${language}.output`)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none min-h-[60px]" />
-                      </div>
-                      <div className="space-y-1">
-                        <label className="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">Explanation</label>
-                        <textarea {...register(`examples.${language}.explanation`)} className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-xs outline-none min-h-[60px]" />
-                      </div>
-                   </div>
-                </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* SECTION E: SUPPLEMENTARY DATA */}
-        <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 space-y-8">
-           <h3 className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Sector_05: Metadata</h3>
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Constraints</label>
-                <textarea {...register("constraints")} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs min-h-[100px] outline-none" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Hints</label>
-                <textarea {...register("hints")} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs min-h-[100px] outline-none" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Editorial</label>
-                <textarea {...register("editorial")} className="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-xs min-h-[100px] outline-none" />
-              </div>
-           </div>
-        </div>
-
-        {/* SUBMIT */}
-        <div className="flex justify-end pt-8 border-t border-white/5">
+        {/* FINAL SUBMIT BUTTON */}
+        <div className="flex justify-end pt-12 border-t border-white/5">
           <button 
             type="submit" 
             disabled={isLoading}
-            className="group relative px-12 py-5 bg-primary text-black font-black uppercase italic tracking-tighter rounded-2xl shadow-[0_0_30px_rgba(var(--p),0.4)] hover:scale-[1.05] active:scale-95 transition-all disabled:opacity-50"
+            className="group relative px-16 py-6 bg-primary text-black font-black uppercase tracking-tight rounded-[2rem] shadow-[0_0_40px_rgba(var(--p),0.4)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 font-display text-xl flex items-center gap-4"
           >
-            {isLoading ? <Loader2 className="animate-spin mx-auto" /> : (
-              <span className="flex items-center gap-3">
-                <CheckCircle2 size={20} />
+            {isLoading ? <Loader2 className="animate-spin" /> : (
+              <>
                 Finalize_Injection
-              </span>
+                <CheckCircle2 size={24} />
+              </>
             )}
           </button>
         </div>

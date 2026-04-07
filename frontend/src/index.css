@@ -1,22 +1,45 @@
+/* 1. MUST BE AT THE VERY TOP */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Orbitron:wght@400..900&family=Inter:wght@100..900&display=swap');
+
+/* 2. THEN TAILWIND & PLUGINS */
 @import "tailwindcss";
 @plugin "daisyui";
 
 /* --- LEETLABS CORE THEME & PERFORMANCE --- */
 
 :root {
-  /* This maps to your primary color #7480ff (DaisyUI Primary) */
-  /* Used for the global success/error background flashes */
   --p: 116, 128, 255; 
+  /* Font Variables */
+  --font-display: 'Orbitron', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-primary: 'Inter', sans-serif;
 }
 
 @layer base {
   html, body {
     @apply bg-[#050505] text-white antialiased;
-    /* Prevent the bounce effect on mobile/trackpads to keep the 'App' feel */
+    font-family: var(--font-primary);
     overscroll-behavior: none;
   }
 
-  /* Universal Selection Color */
+  /* INDUSTRIAL OVERHAUL: 
+     - Removed 'italic' and 'tracking-tighter' for a cleaner, bolder block look
+     - Forced font-black (900 weight)
+  */
+  h1, h2, h3, h4, .card-title, .nav-logo {
+    font-family: var(--font-display);
+    @apply uppercase tracking-tight font-black;
+  }
+
+  /* DATA RIGIDITY:
+     - Forced mono elements to font-bold (700-800)
+     - Applies to all inputs and interactive data elements
+  */
+  code, pre, .stat-value, .badge, button, .label-text-alt, input, select, textarea {
+    font-family: var(--font-mono);
+    @apply font-bold;
+  }
+
   ::selection {
     background-color: rgba(116, 128, 255, 0.3);
     color: white;
@@ -24,58 +47,42 @@
 }
 
 @layer components {
-  /* Smooth Hardware Acceleration for Glassmorphism */
-  .backdrop-blur-md, 
-  .backdrop-blur-xl,
-  .backdrop-blur-sm {
+  /* GPU Acceleration for smooth UI blurs */
+  .backdrop-blur-md, .backdrop-blur-xl, .backdrop-blur-sm {
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000;
   }
 
-  /* Custom 'Lab' Scrollbar */
+  /* Minimalist Industrial Scrollbar */
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
   }
 
-  /* Chrome, Edge, and Safari Scrollbar styling */
   .custom-scrollbar::-webkit-scrollbar {
     width: 5px;
     height: 5px;
   }
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    transition: background 0.3s ease;
+    border-radius: 0px; /* Square edges for brutalist look */
   }
 
   .custom-scrollbar:hover::-webkit-scrollbar-thumb {
-    background: rgba(116, 128, 255, 0.3); /* Primary color glow on hover */
-  }
-
-  /* Hide scrollbar for the main App container but keep functionality */
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    background: rgba(116, 128, 255, 0.3);
   }
 }
 
-/* --- MONACO EDITOR TWEAKS --- */
-/* Ensures the editor corners match our rounded UI */
+/* --- UI COMPONENT FIXES --- */
+
+/* Monaco Editor: Force square edges */
 .monaco-editor, .overflow-guard {
   border-radius: 0px !important; 
 }
 
-/* Custom Animation for the 'Initializing' Loader */
+/* Loader Animation */
 @keyframes loading-slide {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(250%); }
@@ -83,4 +90,10 @@
 
 .animate-loading-slide {
   animation: loading-slide 2s ease-in-out infinite;
+}
+
+/* Ensure all buttons feel like solid blocks */
+.btn {
+    @apply rounded-xl uppercase tracking-widest font-black;
+    border-width: 2px;
 }
