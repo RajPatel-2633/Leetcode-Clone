@@ -50,7 +50,7 @@ const Navbar = () => {
             <span className="text-2xl font-black tracking-tight uppercase font-display text-white">
               LEET<span className="text-primary">SPACE</span>
             </span>
-            <span className="text-[7px] font-mono font-black text-slate-500 tracking-[0.6em] mt-1">
+            <span className="text-[11px] font-mono font-black text-slate-400 tracking-[0.6em] mt-1">
               ORBITAL_SECTOR_01
             </span>
           </div>
@@ -65,7 +65,7 @@ const Navbar = () => {
               className="relative px-4 py-2 transition-all group"
             >
               <div className={`flex items-center gap-2 font-mono font-black text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                isActive(link.path) ? "text-primary" : "text-slate-500 hover:text-white"
+                isActive(link.path) ? "text-primary" : "text-slate-400 hover:text-white"
               }`}>
                 <link.icon size={16} strokeWidth={isActive(link.path) ? 3 : 2} />
                 <span className="hidden md:block">{link.name}</span>
@@ -85,12 +85,12 @@ const Navbar = () => {
         <div className="flex items-center gap-4 pl-4 border-l-2 border-white/5">
             <div className="hidden lg:flex items-center gap-3 px-4 py-1.5 bg-white/[0.03] rounded-lg border border-white/5">
                <Satellite size={12} className="text-primary animate-pulse" />
-               <span className="text-[9px] font-mono font-black text-slate-400 tracking-[0.3em]">SYSTEM_LINK</span>
+               <span className="text-[11px] font-mono font-black text-slate-400 tracking-[0.3em]">SYSTEM_LINK</span>
             </div>
 
           <button 
             onClick={logout}
-            className="p-2 text-slate-500 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all active:scale-90"
+            className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all active:scale-90"
             title="Terminate Session"
           >
             <LogOut size={20} strokeWidth={2.5} />

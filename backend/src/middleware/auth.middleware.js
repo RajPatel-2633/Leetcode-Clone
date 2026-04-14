@@ -5,10 +5,6 @@ import cookieParser from "cookie-parser";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-//     console.log("Headers:", req.headers);
-// console.log("Cookies:", req.cookies);
-//     console.log("All cookies:", req.cookies);       // add this
-//     console.log("JWT cookie:", req.cookies?.jwt);
     const token = req.cookies?.jwt || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -17,6 +13,7 @@ export const authMiddleware = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Hardened DB call to handle Neon connection flickering
     const user = await db.user.findUnique({
       where: { id: decoded.id },
       select: {
@@ -26,6 +23,10 @@ export const authMiddleware = async (req, res, next) => {
         email: true,
         role: true,
       },
+    }).catch(err => {
+        // If DB is unreachable (P1001), log it specifically
+        console.error("Database connection error in authMiddleware:", err.message);
+        throw new InternalServerError("Service temporarily unavailable. Please try again in a few seconds.");
     });
 
     if (!user) {
@@ -36,7 +37,7 @@ export const authMiddleware = async (req, res, next) => {
     next();
 
   } catch (err) {
-    console.log(err);
+    console.error("Auth Middleware Error:", err);
 
     if (err.name === "JsonWebTokenError") {
       return next(new UnauthorizedError("Invalid JWT"));
@@ -46,6 +47,7 @@ export const authMiddleware = async (req, res, next) => {
       return next(new UnauthorizedError("JWT expired"));
     }
 
+    // This catches our custom InternalServerError from the .catch above
     next(err);
   }
 };

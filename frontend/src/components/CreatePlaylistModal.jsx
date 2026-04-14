@@ -56,13 +56,13 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
                   <h3 className="text-3xl font-black uppercase font-display tracking-tight text-white leading-none">
                     New_Collection
                   </h3>
-                  <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest mt-2">
+                  <p className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-2">
                     Status: <span className="text-emerald-500/70">AWAITING_PARAMETERS</span>
                   </p>
                 </div>
                 <button 
                   onClick={onClose} 
-                  className="p-2 bg-white/5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-500 rounded-xl transition-all"
+                  className="p-2 bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
                 >
                   <X size={20} />
                 </button>
@@ -71,7 +71,7 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
               <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
                 {/* Name Input */}
                 <div className="space-y-3">
-                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 ml-1">
                     Manifest_Title
                   </label>
                   <input
@@ -83,7 +83,7 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
                     {...register('name', { required: 'Title is required' })}
                   />
                   {errors.name && (
-                    <p className="text-rose-500 text-[9px] font-black mt-1 ml-2 uppercase tracking-tighter">
+                    <p className="text-rose-500 text-[11px] font-black mt-1 ml-2 uppercase tracking-tighter">
                       [ERROR]: {errors.name.message}
                     </p>
                   )}
@@ -91,7 +91,7 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
 
                 {/* Description Input */}
                 <div className="space-y-3">
-                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 ml-1">
                     Sector_Description
                   </label>
                   <textarea
@@ -114,7 +114,7 @@ const CreatePlaylistModal = ({ isOpen, onClose, onSubmit }) => {
                   <button 
                     type="button" 
                     onClick={onClose} 
-                    className="w-full py-2 text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-600 hover:text-rose-500 transition-colors"
+                    className="w-full py-2 text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400 hover:text-rose-500 transition-colors"
                   >
                     Discard_Protocol
                   </button>

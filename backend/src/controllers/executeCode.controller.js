@@ -22,9 +22,6 @@ const executeCode = async(req,res,next)=>{
         const tokens = submitResponse.map((res)=> res.token);
 
         const results = await pollBatchResults(tokens);
-        // console.log("Result----");
-        // console.log(results);
-
         let allPassed = true;
         const detailedResults = results.map((result,i)=>{
             const stdout = result.stdout?.trim();
@@ -32,12 +29,6 @@ const executeCode = async(req,res,next)=>{
 
             const passed = stdout === expected_output;
             if (!passed) allPassed = false;
-            // console.log(`TestCase #${i+1}`);
-            // console.log(`Input ${stdin[i]}`);
-            // console.log(`Expected Output for test case #${i+1} is ${expected_output}`)
-            // console.log(`Actual Output for test case #${i+1} is ${stdout}`)
-            // console.log(`Matched: ${passed} for Test Case #${i+1}`);
-
             return {
                 testCase:i+1,
                 passed,
@@ -48,9 +39,6 @@ const executeCode = async(req,res,next)=>{
                 time:result.time?`${result.time}s`:undefined
             }
         });
-
-        // console.log(detailedResults);
-        console.log("problemId:", problemId);
 
         const submission = await db.submission.create({
             data:{

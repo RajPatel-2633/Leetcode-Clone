@@ -33,7 +33,7 @@ const ProfileSubmission = () => {
       <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/5 pb-8">
         <div className="space-y-2">
            <h2 className="text-3xl font-black uppercase font-display tracking-tight text-white leading-none">Execution_History</h2>
-           <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">Sector: User_Submissions // Archive_Log</p>
+           <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em]">Sector: User_Submissions // Archive_Log</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
@@ -60,11 +60,11 @@ const ProfileSubmission = () => {
           {/* Quick Stats Mini-Bar */}
           <div className="flex items-center gap-6 bg-white/[0.03] border-2 border-white/5 px-8 py-3 rounded-2xl shadow-xl">
             <div className="text-left border-r-2 border-white/5 pr-6">
-              <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest mb-1">TOTAL_LOGS</p>
+              <p className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest mb-1">TOTAL_LOGS</p>
               <p className="text-xl font-black font-display text-white">{submissions.length}</p>
             </div>
             <div className="text-left">
-              <p className="text-[8px] font-mono font-black text-slate-600 uppercase tracking-widest mb-1">SUCCESS_RATE</p>
+              <p className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest mb-1">SUCCESS_RATE</p>
               <p className="text-xl font-black font-display text-emerald-400">
                 {submissions.filter(s => s.status === 'Accepted').length}
               </p>
@@ -78,7 +78,7 @@ const ProfileSubmission = () => {
         {filteredSubmissions.length === 0 ? (
           <div className="py-24 text-center border-2 border-dashed border-white/5 rounded-[3rem] bg-white/[0.01]">
             <Activity size={48} className="mx-auto text-slate-800 mb-6" />
-            <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-700">No logs detected in this sector.</p>
+            <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">No logs detected in this sector.</p>
           </div>
         ) : (
           filteredSubmissions.map((submission, index) => {
@@ -115,7 +115,7 @@ const ProfileSubmission = () => {
                   </div>
 
                   <div className="flex items-center gap-10 w-full md:w-auto justify-between md:justify-end">
-                    <div className="flex items-center gap-3 text-[10px] font-mono font-black text-slate-600 uppercase tracking-widest">
+                    <div className="flex items-center gap-3 text-[10px] font-mono font-black text-slate-400 uppercase tracking-widest">
                        <Clock size={16} />
                        {new Date(submission.createdAt).toLocaleDateString()}
                     </div>
@@ -123,7 +123,7 @@ const ProfileSubmission = () => {
                       animate={{ rotate: isExpanded ? 180 : 0 }} 
                       className={`p-2 rounded-lg border-2 transition-all ${isExpanded ? 'bg-primary/20 border-primary/40' : 'bg-white/5 border-white/5'}`}
                     >
-                      <ChevronDown size={20} className={isExpanded ? 'text-primary' : 'text-slate-600'} />
+                      <ChevronDown size={20} className={isExpanded ? 'text-primary' : 'text-slate-400'} />
                     </motion.div>
                   </div>
                 </div>
@@ -143,14 +143,14 @@ const ProfileSubmission = () => {
                            <div className="bg-black/40 border-2 border-white/5 p-6 rounded-[1.5rem] flex items-center justify-between shadow-inner">
                               <div className="flex items-center gap-4">
                                 <Zap size={20} className="text-primary" strokeWidth={3} />
-                                <span className="text-[11px] font-mono font-black uppercase tracking-[0.3em] text-slate-500">Latency_Stream</span>
+                                <span className="text-[11px] font-mono font-black uppercase tracking-[0.3em] text-slate-400">Latency_Stream</span>
                               </div>
                               <span className="font-mono text-base font-black text-blue-400">{timeData[0] || 'VOID_MS'}</span>
                            </div>
                            <div className="bg-black/40 border-2 border-white/5 p-6 rounded-[1.5rem] flex items-center justify-between shadow-inner">
                               <div className="flex items-center gap-4">
                                 <HardDrive size={20} className="text-primary" strokeWidth={3} />
-                                <span className="text-[11px] font-mono font-black uppercase tracking-[0.3em] text-slate-500">Memory_Load</span>
+                                <span className="text-[11px] font-mono font-black uppercase tracking-[0.3em] text-slate-400">Memory_Load</span>
                               </div>
                               <span className="font-mono text-base font-black text-purple-400">{memoryData[0] || 'VOID_KB'}</span>
                            </div>
@@ -160,13 +160,13 @@ const ProfileSubmission = () => {
                         <div className="space-y-4">
                            <div className="flex items-center gap-4">
                               <div className="h-px w-10 bg-primary/40" />
-                              <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-500">Source_Buffer_Snapshot</span>
+                              <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">Source_Buffer_Snapshot</span>
                            </div>
                            <div className="relative bg-[#080808] border-2 border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
                               <pre className="p-8 text-[13px] font-mono text-blue-300/80 leading-relaxed overflow-x-auto custom-scrollbar">
                                 <code>{submission.sourceCode}</code>
                               </pre>
-                              <div className="absolute top-4 right-4 text-[8px] font-mono font-black text-white/10 uppercase tracking-widest">
+                              <div className="absolute top-4 right-4 text-[11px] font-mono font-black text-white/10 uppercase tracking-widest">
                                 Read_Only_Access
                               </div>
                            </div>
@@ -175,13 +175,13 @@ const ProfileSubmission = () => {
                         {/* Stdin/Stdout Split */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
                            <div className="space-y-3">
-                              <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-[0.4em] ml-2">Input_Pipe_Data</span>
-                              <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-slate-500 leading-none">
+                              <span className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Input_Pipe_Data</span>
+                              <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-slate-400 leading-none">
                                  {submission.stdin || 'NULL_SIGNAL'}
                               </div>
                            </div>
                            <div className="space-y-3">
-                              <span className="text-[9px] font-mono font-black text-slate-700 uppercase tracking-[0.4em] ml-2">Stdout_Return_Stream</span>
+                              <span className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-[0.4em] ml-2">Stdout_Return_Stream</span>
                               <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-emerald-500/80 leading-none">
                                  {Array.isArray(safeParse(submission.stdout)) 
                                     ? safeParse(submission.stdout).join('') 

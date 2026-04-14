@@ -19,7 +19,7 @@ const LogoutButton = ({ children, className = "" }) => {
       className={`
         group relative flex items-center justify-center gap-3 
         px-8 py-4 rounded-2xl font-mono font-black uppercase tracking-widest
-        bg-white/[0.03] border-2 border-white/5 text-slate-500
+        bg-white/[0.03] border-2 border-white/5 text-slate-400
         hover:bg-rose-500/10 hover:border-rose-500/40 hover:text-rose-500
         transition-all duration-300 shadow-2xl ${className}
       `}

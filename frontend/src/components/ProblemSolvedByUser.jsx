@@ -40,7 +40,7 @@ const ProblemSolvedByUser = () => {
       {solvedProblems.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1 bg-white/[0.03] border-2 border-white/5 p-8 rounded-[2rem] flex flex-col justify-center">
-            <p className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600 mb-2">Solved_Modules</p>
+            <p className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 mb-2">Solved_Modules</p>
             <h3 className="text-5xl font-black font-display text-primary tracking-tight leading-none">{stats.total}</h3>
           </div>
           
@@ -70,13 +70,13 @@ const ProblemSolvedByUser = () => {
       <div className="space-y-4">
         <div className="flex items-center gap-4 mb-2">
             <div className="h-px w-8 bg-primary/40" />
-            <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-600">Execution_History</span>
+            <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">Execution_History</span>
         </div>
         
         {solvedProblems.length === 0 ? (
           <div className="py-24 text-center bg-white/[0.02] border-2 border-dashed border-white/5 rounded-[3rem]">
             <Terminal size={48} className="mx-auto text-slate-800 mb-6" />
-            <p className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600">No logs detected in this sector.</p>
+            <p className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">No logs detected in this sector.</p>
             <Link to="/" className="inline-block mt-8 px-8 py-3 bg-white/5 hover:bg-primary text-white hover:text-black border border-white/10 transition-all text-[10px] font-black uppercase tracking-[0.3em] rounded-xl">
               Access_Global_Index
             </Link>
@@ -100,7 +100,7 @@ const ProblemSolvedByUser = () => {
                   </h4>
                   <div className="flex gap-4 mt-3">
                     {problem.tags?.slice(0, 3).map((tag, idx) => (
-                      <span key={idx} className="text-[9px] font-mono font-bold uppercase tracking-widest text-slate-600 flex items-center gap-2 border-b border-white/5 pb-0.5">
+                      <span key={idx} className="text-[11px] font-mono font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2 border-b border-white/5 pb-0.5">
                         #{tag}
                       </span>
                     ))}
@@ -115,7 +115,7 @@ const ProblemSolvedByUser = () => {
 
                 <Link 
                   to={`/problem/${problem.id}`} 
-                  className="p-4 bg-white/5 hover:bg-primary text-slate-500 hover:text-black rounded-2xl border-2 border-transparent transition-all shadow-xl group/btn"
+                  className="p-4 bg-white/5 hover:bg-primary text-slate-400 hover:text-black rounded-2xl border-2 border-transparent transition-all shadow-xl group/btn"
                 >
                   <ChevronRight size={20} strokeWidth={3} className="group-hover/btn:translate-x-1 transition-transform" />
                 </Link>

@@ -7,7 +7,9 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "script":"node src/index.js",
+    "dev": "nodemon src/index.js",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.19.2",

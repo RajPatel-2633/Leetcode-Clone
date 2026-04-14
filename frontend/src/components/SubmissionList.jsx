@@ -51,7 +51,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
     return (
       <div className="text-center p-24 bg-white/[0.01] border-2 border-dashed border-white/5 rounded-[2.5rem]">
         <Terminal className="mx-auto text-slate-800 mb-6" size={48} />
-        <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-600">
+        <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">
           No_Execution_Logs_Found_In_Sector
         </p>
       </div>
@@ -127,13 +127,13 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                     </h4>
                     <div className="flex items-center gap-2">
                        <Code2 size={12} className="text-primary" />
-                       <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">Compiler: {submission.language}</span>
+                       <span className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-widest">Compiler: {submission.language}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-10">
-                  <div className="hidden md:flex items-center gap-8 text-[11px] font-mono font-black text-slate-600 uppercase tracking-widest">
+                  <div className="hidden md:flex items-center gap-8 text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest">
                     <div className="flex items-center gap-2"><Clock size={14} className="text-primary/50"/> {avgTime.toFixed(3)}s</div>
                     <div className="flex items-center gap-2"><Memory size={14} className="text-primary/50"/> {avgMem.toFixed(0)}KB</div>
                     <div className="flex items-center gap-2"><Calendar size={14} className="text-primary/50"/> {new Date(submission.createdAt).toLocaleDateString()}</div>
@@ -142,7 +142,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                     animate={{ rotate: isExpanded ? 180 : 0 }}
                     className={`p-2 rounded-lg border-2 transition-all ${isExpanded ? 'bg-primary/20 border-primary/40' : 'bg-white/5 border-white/5'}`}
                   >
-                    <ChevronDown size={18} strokeWidth={3} className={isExpanded ? "text-primary" : "text-slate-600"} />
+                    <ChevronDown size={18} strokeWidth={3} className={isExpanded ? "text-primary" : "text-slate-400"} />
                   </motion.div>
                 </div>
               </div>
@@ -159,7 +159,7 @@ const SubmissionsList = ({ submissions, isLoading }) => {
                       <div className="space-y-4">
                         <div className="flex items-center gap-4">
                           <div className="h-px w-10 bg-primary/40" />
-                          <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-500">
+                          <span className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">
                             Source_Buffer_Snapshot
                           </span>
                         </div>
@@ -172,13 +172,13 @@ const SubmissionsList = ({ submissions, isLoading }) => {
 
                       <div className="grid md:grid-cols-2 gap-8">
                         <div className="space-y-3">
-                           <span className="text-[9px] font-mono font-black uppercase text-slate-700 tracking-[0.4em] ml-2">Stdin_Pipe</span>
-                           <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-slate-500 min-h-[80px]">
+                           <span className="text-[11px] font-mono font-black uppercase text-slate-400 tracking-[0.4em] ml-2">Stdin_Pipe</span>
+                           <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-slate-400 min-h-[80px]">
                               {submission.stdin || "NULL_SIGNAL"}
                            </div>
                         </div>
                         <div className="space-y-3">
-                           <span className="text-[9px] font-mono font-black uppercase text-slate-700 tracking-[0.4em] ml-2">Stdout_Return</span>
+                           <span className="text-[11px] font-mono font-black uppercase text-slate-400 tracking-[0.4em] ml-2">Stdout_Return</span>
                            <div className="bg-black/80 p-6 rounded-2xl border-2 border-white/5 text-[12px] font-mono text-emerald-500/80 min-h-[80px]">
                               {Array.isArray(safeParse(submission.stdout))
                                 ? safeParse(submission.stdout).join("")

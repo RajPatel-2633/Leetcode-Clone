@@ -6,7 +6,6 @@
 @plugin "daisyui";
 
 /* --- LEETLABS CORE THEME & PERFORMANCE --- */
-
 :root {
   --p: 116, 128, 255; 
   /* Font Variables */
@@ -15,27 +14,51 @@
   --font-primary: 'Inter', sans-serif;
 }
 
+/* --- THE PRODUCTION VAULT: Kills Horizontal Scroll --- */
+html, body {
+  width: 100vw;
+  max-width: 100%;
+  overflow-x: hidden;
+  position: relative;
+  overscroll-behavior-x: none; /* Prevents mobile "bounce" scroll */
+  margin: 0;
+  text-align: start;
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  margin: 0;
+  text-align: start;
+}
+
 @layer base {
   html, body {
     @apply bg-[#050505] text-white antialiased;
     font-family: var(--font-primary);
-    overscroll-behavior: none;
   }
 
-  /* INDUSTRIAL OVERHAUL: 
-     - Removed 'italic' and 'tracking-tighter' for a cleaner, bolder block look
-     - Forced font-black (900 weight)
-  */
+  /* INDUSTRIAL HEADERS: Responsive font sizing */
   h1, h2, h3, h4, .card-title, .nav-logo {
     font-family: var(--font-display);
     @apply uppercase tracking-tight font-black;
+    max-width: 100%;
+    overflow-wrap: break-word;
   }
 
-  /* DATA RIGIDITY:
-     - Forced mono elements to font-bold (700-800)
-     - Applies to all inputs and interactive data elements
-  */
-  code, pre, .stat-value, .badge, button, .label-text-alt, input, select, textarea {
+  /* STAT VALUE FIX: Fluid sizing for "NOMINAL" and "ACCURACY" */
+  .stat-value {
+    font-family: var(--font-mono);
+    @apply font-bold;
+    /* Scales font between 1.2rem and 3rem based on screen width */
+    font-size: clamp(1.2rem, 7vw, 3rem) !important;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    display: block;
+  }
+
+  code, pre, .badge, button, .label-text-alt, input, select, textarea {
     font-family: var(--font-mono);
     @apply font-bold;
   }
@@ -67,7 +90,7 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 0px; /* Square edges for brutalist look */
+    border-radius: 0px; 
   }
 
   .custom-scrollbar:hover::-webkit-scrollbar-thumb {
@@ -96,4 +119,11 @@
 .btn {
     @apply rounded-xl uppercase tracking-widest font-black;
     border-width: 2px;
+}
+
+/* Force Navbar to respect screen width */
+nav, .navbar {
+  width: 100% !important;
+  max-width: 100vw !important;
+  box-sizing: border-box;
 }

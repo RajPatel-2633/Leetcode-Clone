@@ -40,14 +40,15 @@ const registerUser = async(req,res,next)=>{
             expiresIn:"7d"
         });
 
+        const isProduction = process.env.NODE_ENV==="production";
         res.cookie("jwt",token,{
             httpOnly:true,
-            sameSite:"lax",
-            secure:false,
+            sameSite:isProduction?"none":"lax",
+            secure:isProduction,
             maxAge:1000*60*60*24*7
         })
 
-        return res.status(201).json(ApiResponse.created( { id: newUser.id, email: newUser.email, name: newUser.name, token },"User created Successfully"));
+        return res.status(201).json(ApiResponse.created( { id: newUser.id, email: newUser.email, name: newUser.name, user:newUser.role, token },"User created Successfully"));
 
     } catch (err){
             next(err);
@@ -81,15 +82,16 @@ const loginUser = async(req,res,next)=>{
             expiresIn:"7d"
         });
 
+        const isProduction = process.env.NODE_ENV==="production";
         res.cookie("jwt",token,{
             httpOnly:true,
-            sameSite:"lax",
-            secure:false,
+            sameSite:isProduction?"none":"lax",
+            secure:isProduction,
             maxAge:1000*60*60*24*7
         })
 
 
-        return res.status(200).json(ApiResponse.created( { id: user.id, email: user.email, name: user.name , token},"User Logged In Successfully"));
+        return res.status(200).json(ApiResponse.created( { id: user.id, email: user.email, name: user.name , role:user.role, token},"User Logged In Successfully"));
 
     } catch(err){
         next(err);

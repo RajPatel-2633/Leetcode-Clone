@@ -45,8 +45,7 @@ const SignUpPage = () => {
   const onSubmit = async (data) => {
     try {
       await signup(data);
-    } catch (error) {
-      console.error("SignUp failed:", error);
+    } catch {
     } 
   };
 
@@ -61,20 +60,20 @@ const SignUpPage = () => {
       />
 
       {/* 2. MAIN CONTENT: 50/50 Split Grid */}
-      <div className="flex-1 grid lg:grid-cols-2 overflow-hidden">
+      <div className="flex-1 grid lg:grid-cols-2 overflow-hidden min-h-0">
         
         {/* LEFT COLUMN: SIGNUP FORM */}
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center justify-center p-8 md:p-16 border-r border-white/5"
+          className="flex flex-col items-center justify-center p-8 md:p-16 border-r border-white/5 overflow-y-auto custom-scrollbar min-h-0"
         >
           <div className="w-full max-w-md space-y-8">
             <div className="space-y-1">
                <h3 className="text-3xl font-black uppercase font-display tracking-tight text-white leading-none">
                   New_Operative
                </h3>
-               <p className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-[0.4em]">
+               <p className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-[0.4em]">
                   Awaiting_Credential_Input...
                </p>
             </div>
@@ -82,9 +81,9 @@ const SignUpPage = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               {/* Name */}
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-500 ml-2">Public_Identifier</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-400 ml-2">Public_Identifier</label>
                 <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-primary transition-colors" size={18} />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
                   <input
                     type="text"
                     {...register("name")}
@@ -99,9 +98,9 @@ const SignUpPage = () => {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-500 ml-2">Email_Stream</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-400 ml-2">Email_Stream</label>
                 <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-primary transition-colors" size={18} />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
                   <input
                     type="email"
                     {...register("email")}
@@ -116,9 +115,9 @@ const SignUpPage = () => {
 
               {/* Password */}
               <div className="space-y-2">
-                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-500 ml-2">Security_Token</label>
+                <label className="text-[10px] font-mono font-bold uppercase tracking-[0.3em] text-slate-400 ml-2">Security_Token</label>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-primary transition-colors" size={18} />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={18} />
                   <input
                     type={showPassword ? "text" : "password"}
                     {...register("password")}
@@ -129,7 +128,7 @@ const SignUpPage = () => {
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-600 hover:text-white transition-colors"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-white transition-colors"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -156,7 +155,7 @@ const SignUpPage = () => {
             </form>
 
             <div className="text-center pt-6 border-t border-white/5">
-              <p className="text-slate-500 font-mono text-[10px] uppercase tracking-widest">
+              <p className="text-slate-400 font-mono text-[10px] uppercase tracking-widest">
                 Identity already exists?{" "}
                 <Link to="/login" className="text-primary hover:text-white font-black transition-colors ml-1 border-b border-primary/20">
                   Secure_Login
