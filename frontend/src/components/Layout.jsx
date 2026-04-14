@@ -7,7 +7,7 @@ const Layout = () => {
   const location = useLocation();
 
   return (
-    <div className="relative h-screen w-full bg-[#050505] text-white overflow-hidden flex flex-col font-primary">
+    <div className="relative h-screen w-full max-w-full overflow-x-hidden bg-[#050505] text-white overflow-hidden flex flex-col font-primary">
       
       {/* 1. Global Technical Background */}
       <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
@@ -37,9 +37,9 @@ const Layout = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="h-full w-full overflow-y-auto custom-scrollbar px-6 md:px-10 pb-20"
+            className="h-full w-full max-w-full overflow-x-hidden overflow-y-auto custom-scrollbar p-4 md:p-6 pb-16 md:pb-20"
           >
-            <div className="max-w-[1800px] mx-auto">
+            <div className="w-full max-w-full">
               <Outlet />
             </div>
           </motion.div>
@@ -53,7 +53,7 @@ const Layout = () => {
       <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
         <div className="flex items-center gap-3 bg-black/40 border border-white/5 px-4 py-2 rounded-full backdrop-blur-md">
           <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[8px] font-mono font-black uppercase tracking-[0.4em] text-slate-500">
+          <span className="text-[11px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">
             System_Node: {location.pathname === '/' ? 'DASHBOARD' : location.pathname.split('/')[1].toUpperCase()}
           </span>
         </div>

@@ -18,7 +18,7 @@ const AuthImagePattern = ({ title, subtitle, isHeaderOnly = false }) => {
             </h2>
             <div className="hidden md:flex items-center gap-3 border-l border-white/10 pl-6">
               <Activity size={14} className="text-primary animate-pulse" />
-              <p className="text-[9px] font-mono font-black uppercase tracking-[0.4em] text-slate-500">
+              <p className="text-[11px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">
                 Protocol: Secure_Auth_v4
               </p>
             </div>
@@ -28,7 +28,7 @@ const AuthImagePattern = ({ title, subtitle, isHeaderOnly = false }) => {
             initial={{ x: 20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-slate-500 font-mono font-bold text-[9px] uppercase tracking-[0.2em] hidden lg:block"
+            className="text-slate-400 font-mono font-bold text-[11px] uppercase tracking-[0.2em] hidden lg:block"
           >
             {subtitle}
           </motion.p>
@@ -96,7 +96,7 @@ const AuthImagePattern = ({ title, subtitle, isHeaderOnly = false }) => {
               className="absolute top-0 px-2.5 py-1 bg-black/80 border border-white/10 rounded backdrop-blur-md shadow-xl"
               style={{ transform: `rotate(${-data.rotation + 360}deg)` }}
             >
-              <span className="text-[7px] font-mono font-black text-primary uppercase tracking-widest whitespace-nowrap">
+              <span className="text-[11px] font-mono font-black text-primary uppercase tracking-widest whitespace-nowrap">
                 {data.text}
               </span>
             </div>
@@ -108,7 +108,7 @@ const AuthImagePattern = ({ title, subtitle, isHeaderOnly = false }) => {
       </div>
 
       {/* Decorative Corner Label */}
-      <div className="absolute bottom-8 right-8 font-mono font-black text-[8px] text-white/10 uppercase tracking-[1em] [writing-mode:vertical-lr]">
+      <div className="absolute bottom-8 right-8 font-mono font-black text-[11px] text-white/10 uppercase tracking-[1em] [writing-mode:vertical-lr]">
         STATIC_ANALYSIS_MODE
       </div>
     </div>

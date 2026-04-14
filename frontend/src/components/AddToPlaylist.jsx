@@ -65,13 +65,13 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                   <h3 className="text-3xl font-black uppercase font-display tracking-tight text-white leading-none">
                     Link_Module
                   </h3>
-                  <p className="text-[9px] font-mono font-bold text-slate-600 uppercase tracking-widest mt-2">
+                  <p className="text-[11px] font-mono font-bold text-slate-400 uppercase tracking-widest mt-2">
                     Target_UID: <span className="text-slate-400">{problemId?.slice(-8).toUpperCase() || "NULL_PTR"}</span>
                   </p>
                 </div>
                 <button 
                   onClick={onClose} 
-                  className="p-2 bg-white/5 hover:bg-rose-500/20 text-slate-500 hover:text-rose-500 rounded-xl transition-all"
+                  className="p-2 bg-white/5 hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 rounded-xl transition-all"
                 >
                   <X size={20} />
                 </button>
@@ -80,7 +80,7 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-10">
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">
+                  <label className="flex items-center gap-2 text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 ml-1">
                     <Database size={12} className="text-primary" />
                     Target_Collection
                   </label>
@@ -99,7 +99,7 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                       ))}
                     </select>
                     
-                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-600 group-hover:text-primary transition-colors">
+                    <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-primary transition-colors">
                         <ChevronDown size={20} />
                     </div>
                   </div>
@@ -109,7 +109,7 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                   <button 
                     type="submit" 
                     disabled={!selectedPlaylist || isLoading}
-                    className="w-full relative group py-5 bg-primary disabled:bg-white/5 disabled:text-slate-700 text-black rounded-2xl font-black uppercase tracking-tight shadow-[0_0_30px_rgba(var(--p),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 overflow-hidden font-display text-lg"
+                    className="w-full relative group py-5 bg-primary disabled:bg-white/5 disabled:text-slate-400 text-black rounded-2xl font-black uppercase tracking-tight shadow-[0_0_30px_rgba(var(--p),0.3)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 overflow-hidden font-display text-lg"
                   >
                     {isLoading ? (
                       <Loader2 className="w-6 h-6 animate-spin text-black" />
@@ -124,7 +124,7 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                   <button 
                     type="button" 
                     onClick={onClose} 
-                    className="w-full py-2 text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-600 hover:text-rose-500 transition-colors"
+                    className="w-full py-2 text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400 hover:text-rose-500 transition-colors"
                   >
                     Abort_Protocol
                   </button>

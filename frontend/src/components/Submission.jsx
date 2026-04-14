@@ -58,14 +58,21 @@ const SubmissionResults = ({ submission }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
-            className="bg-white/[0.03] border-2 border-white/5 p-6 rounded-2xl backdrop-blur-md shadow-xl"
+            className="bg-white/[0.03] border-2 border-white/5 p-6 rounded-2xl backdrop-blur-md shadow-xl flex flex-col justify-between min-h-[140px]"
           >
-            <div className="flex items-center gap-3 mb-4">
-              <metric.icon size={16} strokeWidth={2.5} className="text-slate-600" />
-              <span className="text-[9px] font-mono font-black uppercase tracking-[0.3em] text-slate-500">{metric.label}</span>
+            <div className="flex items-center gap-3">
+              <metric.icon size={16} strokeWidth={2.5} className="text-slate-400 shrink-0" />
+              <span className="text-[11px] font-mono font-black uppercase tracking-[0.3em] text-slate-400 truncate">
+                {metric.label}
+              </span>
             </div>
-            <div className={`text-2xl font-black font-display tracking-tight leading-none ${metric.color}`}>
-              {metric.value}
+
+            {/* FIXED: 
+                1. .replace('_', ' ') allows the browser to wrap "WRONG ANSWER" into two lines.
+                2. leading-[1.1] keeps the two lines close together for a tight "Industrial" look.
+            */}
+            <div className={`text-lg md:text-xl lg:text-2xl font-black font-display tracking-tighter leading-[1.1] mt-4 break-words uppercase ${metric.color}`}>
+              {metric.value.replace('_', ' ')}
             </div>
           </motion.div>
         ))}
@@ -81,7 +88,7 @@ const SubmissionResults = ({ submission }) => {
               </h3>
            </div>
            <div className="px-3 py-1 bg-white/5 border border-white/10 rounded-md">
-             <span className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-widest">
+             <span className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-widest">
                ID_BUFFER: {submission.id?.slice(-8).toUpperCase() || 'LIVE_FEED'}
              </span>
            </div>
@@ -90,7 +97,7 @@ const SubmissionResults = ({ submission }) => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/[0.01] border-b-2 border-white/5 text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600">
+              <tr className="bg-white/[0.01] border-b-2 border-white/5 text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">
                 <th className="px-8 py-5">Verification</th>
                 <th className="px-8 py-5">Expectation</th>
                 <th className="px-8 py-5">Stdout_Return</th>
@@ -125,12 +132,12 @@ const SubmissionResults = ({ submission }) => {
                     </code>
                   </td>
                   <td className="px-8 py-6">
-                    <span className="text-xs font-mono font-black text-slate-500 tracking-wider">
+                    <span className="text-xs font-mono font-black text-slate-400 tracking-wider">
                       {testCase.memory || '0_KB'}
                     </span>
                   </td>
                   <td className="px-8 py-6 text-right">
-                    <span className="text-xs font-mono font-black text-slate-500 tracking-wider">
+                    <span className="text-xs font-mono font-black text-slate-400 tracking-wider">
                       {testCase.time || '0.000_S'}
                     </span>
                   </td>
@@ -142,7 +149,7 @@ const SubmissionResults = ({ submission }) => {
 
         {/* Footer Hardware Mark */}
         <div className="bg-black/40 px-8 py-4 border-t-2 border-white/5 text-right">
-           <span className="text-[8px] font-mono font-black text-slate-800 uppercase tracking-[1em]">
+           <span className="text-[11px] font-mono font-black text-slate-800 uppercase tracking-[1em]">
               End_Of_Transmission_Node_Active
            </span>
         </div>

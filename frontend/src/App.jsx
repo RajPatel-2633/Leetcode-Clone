@@ -63,7 +63,7 @@ const App = () => {
     );
 
   return (
-    <div className={`h-screen w-full bg-[#050505] transition-all duration-1000 border-0 overflow-hidden relative ${getAmbientGlow()}`}>
+    <div className={`h-screen w-full max-w-full overflow-x-hidden bg-[#050505] transition-all duration-1000 border-0 overflow-hidden relative ${getAmbientGlow()}`}>
       <Toaster 
         position="top-right"
         toastOptions={{

@@ -6,15 +6,16 @@ import {
   Trash2,
   Code2,
   FileText,
-  Lightbulb,
-  BookOpen,
   CheckCircle2,
   Download,
+  Loader2,
+  Terminal,
 } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 import {Navigate, useNavigate} from "react-router-dom";
 import { useProblemStore } from "../store/useProblemStore";
 
@@ -31,40 +32,43 @@ const problemSchema = z.object({
       z.object({
         input: z.string().min(1, "Input is required"),
         output: z.string().min(1, "Output is required"),
+        explanation: z.string().optional(),
       })
     )
     .min(1, "At least one test case is required"),
   examples: z.object({
     JAVASCRIPT: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
+      input: z.string().optional(),
+      output: z.string().optional(),
       explanation: z.string().optional(),
-    }),
+    }).optional(),
     PYTHON: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
+      input: z.string().optional(),
+      output: z.string().optional(),
       explanation: z.string().optional(),
-    }),
+    }).optional(),
     JAVA: z.object({
-      input: z.string().min(1, "Input is required"),
-      output: z.string().min(1, "Output is required"),
+      input: z.string().optional(),
+      output: z.string().optional(),
       explanation: z.string().optional(),
-    }),
+    }).optional(),
   }),
   codeSnippets: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
-    PYTHON: z.string().min(1, "Python code snippet is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
+    input: z.string().optional(),
+    output: z.string().optional(),
+    explanation: z.string().optional(),
+  }).optional(),
   referenceSolutions: z.object({
-    JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
-    PYTHON: z.string().min(1, "Python solution is required"),
-    JAVA: z.string().min(1, "Java solution is required"),
-  }),
+    input: z.string().optional(),
+    output: z.string().optional(),
+    explanation: z.string().optional(),
+  }).optional(),
 });
 
 // Sample problem data for pre-filling the form
 // Sample problem data for pre-filling the form
+
+
 const sampledpData = {
   title: "Climbing Stairs",
   category: "dp", // Dynamic Programming
@@ -519,12 +523,19 @@ const navigation = useNavigate();
     register,
     control,
     handleSubmit,
+    getValues,
     reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
-      testCases: [{ input: "", output: "" }],
+      title: "",
+      description: "",
+      difficulty: "EASY",
+      constraints: "",
+      hints: "",
+      editorial: "",
+      testCases: [{ input: "", output: "", explanation: "" }],
       tags: [""],
       examples: {
         JAVASCRIPT: { input: "", output: "", explanation: "" },
@@ -532,14 +543,14 @@ const navigation = useNavigate();
         JAVA: { input: "", output: "", explanation: "" },
       },
       codeSnippets: {
-        JAVASCRIPT: "function solution() {\n  // Write your code here\n}",
-        PYTHON: "def solution():\n    # Write your code here\n    pass",
-        JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
+        JAVASCRIPT: "",
+        PYTHON: "",
+        JAVA: "",
       },
       referenceSolutions: {
-        JAVASCRIPT: "// Add your reference solution here",
-        PYTHON: "# Add your reference solution here",
-        JAVA: "// Add your reference solution here",
+        JAVASCRIPT: "",
+        PYTHON: "",
+        JAVA: "",
       },
     },
   });
@@ -567,20 +578,61 @@ const navigation = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (value) => {
     try {
-      // stringify the data
       setIsLoading(true);
-      const res = await axiosInstance.post("/problems/create-problem", value);
-      
-      console.log(res.data);
+      const rawFormData = getValues();
+      const languages = ["JAVASCRIPT", "PYTHON", "JAVA"];
+
+      const codeSnippets = {};
+      languages.forEach((language) => {
+        const snippetCode = rawFormData?.codeSnippets?.[language];
+        if (language && snippetCode?.trim()) {
+          codeSnippets[language.toUpperCase()] = snippetCode;
+        }
+      });
+
+      const referenceSolutions = {};
+      languages.forEach((language) => {
+        const referenceCode = rawFormData?.referenceSolutions?.[language];
+        if (language && referenceCode?.trim()) {
+          referenceSolutions[language.toUpperCase()] = referenceCode;
+        }
+      });
+
+      const normalizedTestCases = (value.testCases || []).map((tc) => ({
+        input: tc.input || "",
+        output: tc.output || "",
+        explanation: tc.explanation || "",
+      }));
+
+      const hasExplicitExamples = Object.values(value.examples || {}).some(
+        (example) =>
+          Boolean(example?.input?.trim()) ||
+          Boolean(example?.output?.trim()) ||
+          Boolean(example?.explanation?.trim())
+      );
+
+      const fallbackExamples = normalizedTestCases.slice(0, 3).map((tc) => ({
+        input: tc.input,
+        output: tc.output,
+        explanation: tc.explanation || "",
+      }));
+
+      const finalPayload = {
+        ...value,
+        codeSnippets,
+        referenceSolutions,
+        testCases: normalizedTestCases,
+        examples: hasExplicitExamples ? value.examples : fallbackExamples,
+      };
+
+      const res = await axiosInstance.post("/problems/create-problem", finalPayload);
       toast.success(res.data.message);
-      
+
       // Refresh problems list before navigating
-      console.log("Calling refreshProblems");
       await useProblemStore.getState().refreshProblems();
       
       navigation("/");
     } catch (error) {
-      console.log("Error creating problem", error);
       toast.error("Error creating problem");
     } finally {
       setIsLoading(false);
@@ -591,13 +643,29 @@ const navigation = useNavigate();
   const loadSampleData = () => {
     const sampleData =
       sampleType === "DP" ? sampledpData : sampleStringProblem;
+    const mappedTestCases = sampleData.testCases.map((tc) => ({
+      input: tc.input,
+      output: tc.output,
+      explanation: tc.explanation || "",
+    }));
+    const mappedSampleData = {
+      ...sampleData,
+      constraints: sampleData.constraints || "",
+      testCases: mappedTestCases,
+    };
 
-    // Replace the tags and test cases arrays
+    // Replace the tags
     replaceTags(sampleData.tags.map((tag) => tag));
-    replaceTestCases(sampleData.testCases.map((tc) => tc));
+
+    // FIX: Map test cases explicitly to ensure explanation is handled
+    // This ensures that if the sampleData HAS an explanation, it's used,
+    // and if it DOESN'T, it's set to an empty string to clear the "ghost" data.
+    replaceTestCases(
+      mappedTestCases
+    );
 
     // Reset the form with sample data
-    reset(sampleData);
+    reset(mappedSampleData);
   };
 
   return (
@@ -612,7 +680,7 @@ const navigation = useNavigate();
             <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
               Initialize_Module
             </h2>
-            <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em] mt-2">
+            <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em] mt-2">
               Sector: Database_Input // New_Record
             </p>
           </div>
@@ -628,7 +696,7 @@ const navigation = useNavigate();
                 className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
                   sampleType === (type.toLowerCase() === "dp" ? "array" : "string") 
                     ? "bg-primary text-black shadow-[0_0_15px_rgba(var(--p),0.4)]" 
-                    : "text-slate-500 hover:text-white"
+                    : "text-slate-400 hover:text-white"
                 }`}
               >
                 {type}_Template
@@ -657,7 +725,7 @@ const navigation = useNavigate();
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2 space-y-3">
-              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Module_Title</label>
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 ml-2">Module_Title</label>
               <input
                 type="text"
                 {...register("title")}
@@ -668,7 +736,7 @@ const navigation = useNavigate();
             </div>
 
             <div className="space-y-3">
-              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Difficulty_Rating</label>
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 ml-2">Difficulty_Rating</label>
               <select
                 {...register("difficulty")}
                 className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 focus:border-primary/50 outline-none appearance-none font-black text-primary font-mono tracking-widest"
@@ -680,12 +748,22 @@ const navigation = useNavigate();
             </div>
 
             <div className="md:col-span-3 space-y-3">
-              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-500 ml-2">Description_Payload</label>
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 ml-2">Description_Payload</label>
               <textarea
                 {...register("description")}
                 className="w-full bg-white/[0.03] border-2 border-white/5 rounded-[2rem] p-8 focus:border-primary/50 outline-none min-h-[250px] resize-none font-medium leading-relaxed transition-all"
                 placeholder="LOAD_DESCRIPTION_LOGIC..."
               />
+            </div>
+
+            <div className="md:col-span-3 space-y-3">
+              <label className="text-[10px] font-mono font-black uppercase tracking-widest text-slate-400 ml-2">Constraints_Payload</label>
+              <textarea
+                {...register("constraints")}
+                className={`w-full bg-white/[0.02] border-2 border-white/5 rounded-2xl p-6 focus:border-primary/50 outline-none min-h-[120px] resize-none font-mono text-xs leading-relaxed transition-all ${errors.constraints ? "border-rose-500/50" : ""}`}
+                placeholder="DEFINE_CONSTRAINTS..."
+              />
+              {errors.constraints && <p className="text-rose-500 text-[10px] font-black mt-1 ml-2 uppercase tracking-tighter">{errors.constraints.message}</p>}
             </div>
           </div>
         </div>
@@ -723,7 +801,7 @@ const navigation = useNavigate();
                   type="button"
                   onClick={() => removeTag(index)}
                   disabled={tagFields.length === 1}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-600 hover:text-rose-500 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-rose-500 transition-colors"
                 >
                   <Trash2 size={14} />
                 </button>
@@ -741,7 +819,7 @@ const navigation = useNavigate();
             </div>
             <button
               type="button"
-              onClick={() => appendTestCase({ input: "", output: "" })}
+              onClick={() => appendTestCase({ input: "", output: "", explanation: "" })}
               className="flex items-center gap-3 px-6 py-3 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500/20 transition-all"
             >
               <Plus size={14} /> New_Validation_Node
@@ -757,19 +835,23 @@ const navigation = useNavigate();
                   className="bg-black/40 border-2 border-white/5 rounded-[2rem] p-8 space-y-6 relative overflow-hidden group hover:border-emerald-500/20 transition-colors"
                 >
                   <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600">NODE_{index + 1} // BUFFER</span>
-                    <button type="button" onClick={() => removeTestCase(index)} disabled={testCaseFields.length === 1} className="text-slate-600 hover:text-rose-500 transition-colors">
+                    <span className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">NODE_{index + 1} // BUFFER</span>
+                    <button type="button" onClick={() => removeTestCase(index)} disabled={testCaseFields.length === 1} className="text-slate-400 hover:text-rose-500 transition-colors">
                       <Trash2 size={16} />
                     </button>
                   </div>
                   <div className="space-y-5">
                     <div className="space-y-2">
-                        <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest ml-1">Input_Stream</label>
+                        <label className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest ml-1">Input_Stream</label>
                         <textarea {...register(`testCases.${index}.input`)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-mono outline-none focus:border-blue-500/50 min-h-[100px] resize-none" />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest ml-1">Expected_Return</label>
+                        <label className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest ml-1">Expected_Return</label>
                         <textarea {...register(`testCases.${index}.output`)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-mono outline-none focus:border-emerald-500/50 min-h-[100px] resize-none" />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest ml-1">Execution_Explanation</label>
+                        <textarea {...register(`testCases.${index}.explanation`)} className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-xs font-mono outline-none focus:border-primary/50 min-h-[90px] resize-none" placeholder="OPTIONAL_REASONING_TRACE..." />
                     </div>
                   </div>
                 </motion.div>
@@ -794,7 +876,7 @@ const navigation = useNavigate();
                     <Code2 className="text-primary" size={20} />
                     <span className="font-display font-black uppercase tracking-tight text-2xl text-white">{language}</span>
                   </div>
-                  <div className="px-4 py-1.5 rounded-full border border-white/10 text-[8px] font-mono font-black text-slate-500 uppercase tracking-widest">
+                  <div className="px-4 py-1.5 rounded-full border border-white/10 text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest">
                     Source_Template_Type: {language}
                   </div>
                 </div>
@@ -803,7 +885,7 @@ const navigation = useNavigate();
                   {/* Starter Code */}
                   <div className="p-10 border-r border-white/5 space-y-6">
                     <div className="flex items-center justify-between">
-                        <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] flex items-center gap-2">
+                        <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-2">
                           <Terminal size={14}/> Starter_Code
                         </h4>
                     </div>

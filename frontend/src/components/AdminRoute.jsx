@@ -37,7 +37,7 @@ const AdminRoute = () => {
 
                 {/* Decorative side data */}
                 <div className="absolute bottom-10 left-10 opacity-10">
-                    <p className="text-[8px] font-black uppercase tracking-[1em] [writing-mode:vertical-lr]">
+                    <p className="text-[11px] font-black uppercase tracking-[1em] [writing-mode:vertical-lr]">
                         LEVEL_07_ENCRYPTION_ACTIVE
                     </p>
                 </div>

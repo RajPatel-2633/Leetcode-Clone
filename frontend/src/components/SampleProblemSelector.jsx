@@ -64,13 +64,13 @@ const SampleProblemSelector = ({ isOpen, onClose, onSelectProblem, problems }) =
                 <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
                   Dataset_Index<span className="text-primary">.</span>
                 </h2>
-                <p className="text-[10px] font-mono font-black text-slate-500 uppercase tracking-[0.4em]">
+                <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em]">
                   Directory // Sector: Sample_Protocols
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="p-4 bg-white/5 border-2 border-white/5 rounded-2xl hover:bg-rose-500/10 hover:border-rose-500/40 text-slate-500 hover:text-rose-500 transition-all"
+                className="p-4 bg-white/5 border-2 border-white/5 rounded-2xl hover:bg-rose-500/10 hover:border-rose-500/40 text-slate-400 hover:text-rose-500 transition-all"
               >
                 <X size={20} strokeWidth={3} />
               </button>
@@ -82,7 +82,7 @@ const SampleProblemSelector = ({ isOpen, onClose, onSelectProblem, problems }) =
               <div className="w-80 bg-black/40 p-8 border-r-2 border-white/5 overflow-y-auto custom-scrollbar space-y-8">
                 <div className="flex items-center gap-3">
                     <div className="h-px w-8 bg-primary/40" />
-                    <h4 className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-600">Category_Nodes</h4>
+                    <h4 className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400">Category_Nodes</h4>
                 </div>
                 
                 <div className="space-y-4">
@@ -111,7 +111,7 @@ const SampleProblemSelector = ({ isOpen, onClose, onSelectProblem, problems }) =
                 {/* Search Bar */}
                 <div className="p-8 border-b-2 border-white/5 bg-black/40 backdrop-blur-md z-10">
                   <div className="relative group">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-primary transition-colors" size={20} />
+                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" size={20} />
                     <input
                       type="text"
                       placeholder="SEARCH_ACTIVE_PROTOCOLS..."
@@ -132,7 +132,7 @@ const SampleProblemSelector = ({ isOpen, onClose, onSelectProblem, problems }) =
                         className="flex flex-col items-center justify-center h-full text-center border-2 border-dashed border-white/5 rounded-[3rem] py-20 bg-white/[0.01]"
                       >
                          <Terminal size={48} className="text-slate-800 mb-6" />
-                         <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-700">Sector_Empty: No_Matching_Nodes</p>
+                         <p className="text-[10px] font-mono font-black uppercase tracking-[0.5em] text-slate-400">Sector_Empty: No_Matching_Nodes</p>
                       </motion.div>
                     ) : (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

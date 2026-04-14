@@ -59,10 +59,10 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white py-12 px-6 font-primary">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#050505] text-white py-8 md:py-12 px-4 sm:px-6 font-primary flex flex-col items-start">
       {/* 1. Page Header: Straight & Heavy */}
-      <div className="max-w-7xl mx-auto mb-16 flex items-center justify-between border-b-2 border-white/5 pb-10">
-        <div className="flex items-center gap-8">
+      <div className="w-full max-w-full mb-12 md:mb-16 flex flex-wrap items-start justify-between gap-6 border-b-2 border-white/5 pb-8 md:pb-10">
+        <div className="flex items-center gap-6 md:gap-8 min-w-0">
           <Link to="/" className="p-4 bg-white/5 border-2 border-white/5 rounded-2xl hover:border-primary/40 transition-all group">
             <ArrowLeft className="group-hover:-translate-x-1 transition-transform" strokeWidth={3} />
           </Link>
@@ -70,7 +70,7 @@ const Profile = () => {
             <h1 className="text-5xl font-black uppercase font-display tracking-tight leading-none">
               IDENTITY<span className="text-primary">.</span>
             </h1>
-            <p className="text-slate-600 font-mono text-[10px] font-black tracking-[0.5em] uppercase">
+            <p className="text-slate-400 font-mono text-[10px] font-black tracking-[0.5em] uppercase">
               SECTOR: USER_PROFILE_BUFFER // 0xAF42
             </p>
           </div>
@@ -81,16 +81,16 @@ const Profile = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-12">
+      <div className="w-full max-w-full grid grid-cols-1 lg:grid-cols-[minmax(0,380px)_1fr] gap-8 lg:gap-12 items-start">
         
         {/* 2. Left Sidebar: Biometric Interface */}
-        <div className="space-y-6">
-          <div className="bg-[#080808] border-2 border-white/5 rounded-[2.5rem] p-10 backdrop-blur-md sticky top-28 shadow-2xl overflow-hidden">
+        <div className="w-full max-w-full min-w-0 space-y-6">
+          <div className="bg-[#080808] border-2 border-white/5 rounded-[2.5rem] p-6 md:p-8 backdrop-blur-md lg:sticky lg:top-28 shadow-2xl overflow-hidden w-full min-w-0">
             {/* Background Texture */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `radial-gradient(#fff 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
             
-            <div className="relative flex flex-col items-center text-center z-10">
-              <div className="relative group mb-8">
+            <div className="relative flex flex-col items-start text-left z-10 w-full min-w-0">
+              <div className="relative group mb-8 self-center">
                 {/* Scanner Glow */}
                 <div className="absolute -inset-4 bg-primary/10 blur-3xl rounded-full group-hover:bg-primary/20 transition-all" />
                 <div className="relative size-40 rounded-full border-4 border-primary p-2 shadow-[0_0_30px_rgba(var(--p),0.2)]">
@@ -113,10 +113,10 @@ const Profile = () => {
                 </button>
               </div>
 
-              <h2 className="text-3xl font-black tracking-tight uppercase font-display text-white leading-none">
+              <h2 className="text-3xl font-black tracking-tight uppercase font-display text-white leading-none w-full">
                 {authUser?.name || "ANONYMOUS_UNIT"}
               </h2>
-              <div className="mt-4 px-4 py-1.5 bg-white/[0.03] border-2 border-white/5 rounded-xl text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500">
+              <div className="mt-4 px-4 py-1.5 bg-white/[0.03] border-2 border-white/5 rounded-xl text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 w-full">
                 AUTH_ROLE: {authUser?.role || "USER"}
               </div>
 
@@ -126,8 +126,8 @@ const Profile = () => {
                     <Mail className="text-primary" size={20} strokeWidth={2.5} />
                    </div>
                    <div className="text-left">
-                      <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest leading-none mb-1">Email_Endpoint</p>
-                      <p className="text-xs font-bold font-mono truncate max-w-[200px] text-slate-300">{authUser?.email}</p>
+                      <p className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Email_Endpoint</p>
+                      <p className="text-xs font-bold font-mono break-all text-slate-300 min-w-0 max-w-full">{authUser?.email}</p>
                    </div>
                 </div>
                 <div className="flex items-center gap-5 p-5 bg-black/40 rounded-2xl border-2 border-white/5 group hover:border-primary/20 transition-colors">
@@ -135,7 +135,7 @@ const Profile = () => {
                     <Shield className="text-primary" size={20} strokeWidth={2.5} />
                    </div>
                    <div className="text-left">
-                      <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-widest leading-none mb-1">Clearance_Level</p>
+                      <p className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Clearance_Level</p>
                       <p className="text-xs font-bold font-mono uppercase text-slate-300">
                         {authUser?.role === "ADMIN" ? "RESTRICTED_ROOT" : "STANDARD_OPERATIVE"}
                       </p>
@@ -143,7 +143,7 @@ const Profile = () => {
                 </div>
               </div>
 
-              <button className="w-full mt-8 py-5 bg-white/[0.03] border-2 border-white/5 rounded-2xl text-[10px] font-mono font-black uppercase tracking-[0.3em] text-slate-400 hover:bg-white/[0.06] hover:text-white transition-all flex items-center justify-center gap-3">
+              <button className="w-full mt-8 py-5 bg-white/[0.03] border-2 border-white/5 rounded-2xl text-[10px] font-mono font-black uppercase tracking-[0.3em] text-slate-400 hover:bg-white/[0.06] hover:text-white transition-all flex items-center justify-start gap-3 px-4">
                 <Lock size={16} strokeWidth={3} /> CHANGE_ACCESS_KEYS
               </button>
             </div>
@@ -151,22 +151,22 @@ const Profile = () => {
         </div>
 
         {/* 3. Main Content: Hardware Telemetry */}
-        <div className="space-y-12">
+        <div className="w-full max-w-full min-w-0 space-y-10 md:space-y-12">
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="w-full max-w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {statsConfig.map((stat, i) => (
               <motion.div 
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white/[0.02] border-2 border-white/5 p-8 rounded-[2rem] backdrop-blur-md group hover:border-primary/40 transition-all shadow-xl"
+                className="w-full min-w-0 max-w-full bg-white/[0.02] border-2 border-white/5 p-6 sm:p-8 rounded-[2rem] backdrop-blur-md group hover:border-primary/40 transition-all shadow-xl"
               >
                 <stat.icon className={`${stat.color} mb-4 group-hover:scale-125 transition-transform`} size={24} strokeWidth={2.5} />
-                <div className="text-4xl font-black font-display tracking-tight text-white leading-none">
+                <div className="text-2xl md:text-4xl font-black font-display tracking-tight text-white leading-tight break-all whitespace-normal min-w-0">
                   {isLoadingStats ? "..." : stat.value}
                 </div>
-                <div className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-[0.4em] mt-3">
+                <div className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-[0.4em] mt-3">
                   {stat.label}
                 </div>
               </motion.div>
@@ -174,37 +174,53 @@ const Profile = () => {
           </div>
 
           {/* Activity Sections */}
-          <div className="space-y-20 pt-4">
-            <section className="relative">
-                <div className="flex items-center gap-6 mb-10">
-                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">SUBMISSIONS_LOG</h3>
-                    <div className="h-px flex-1 bg-white/5" />
-                </div>
-                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
-                  <ProfileSubmission />
-                </div>
-            </section>
+          <div className="space-y-24 pt-4 w-full">
+  
+              {/* 1. SUBMISSIONS SECTION */}
+              <section className="relative w-full">
+                  <div className="space-y-2 mb-10">
+                    <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
+                      SUBMISSIONS_LOG
+                    </h2>
+                    <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em]">
+                      DATA_SECTOR: EXECUTION_HISTORY // NODE_01
+                    </p>
+                  </div>
+                  <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner w-full overflow-hidden">
+                    <ProfileSubmission />
+                  </div>
+              </section>
 
-            <section className="relative">
-                <div className="flex items-center gap-6 mb-10">
-                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">SOLVED_MODULES</h3>
-                    <div className="h-px flex-1 bg-white/5" />
-                </div>
-                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
-                  <ProblemSolvedByUser />
-                </div>
-            </section>
+              {/* 2. SOLVED MODULES SECTION */}
+              <section className="relative w-full">
+                  <div className="space-y-2 mb-10">
+                    <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
+                      SOLVED_MODULES
+                    </h2>
+                    <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em]">
+                      DATA_SECTOR: COMPLETED_PROTOCOLS // ARCHIVE_01
+                    </p>
+                  </div>
+                  <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner w-full overflow-hidden">
+                    <ProblemSolvedByUser />
+                  </div>
+              </section>
 
-            <section className="relative">
-                <div className="flex items-center gap-6 mb-10">
-                    <h3 className="text-[11px] font-mono font-black uppercase tracking-[0.6em] text-slate-500 shrink-0">COLLECTIONS</h3>
-                    <div className="h-px flex-1 bg-white/5" />
-                </div>
-                <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner">
-                  <PlaylistProfile />
-                </div>
-            </section>
-          </div>
+              {/* 3. COLLECTIONS SECTION */}
+              <section className="relative w-full">
+                  <div className="space-y-2 mb-10">
+                    <h2 className="text-4xl font-black uppercase font-display tracking-tight text-white leading-none">
+                      COLLECTIONS_MANIFEST
+                    </h2>
+                    <p className="text-[10px] font-mono font-black text-slate-400 uppercase tracking-[0.4em]">
+                      DATA_SECTOR: USER_PLAYLISTS // ACCESS_LEVEL_01
+                    </p>
+                  </div>
+                  <div className="bg-[#080808]/50 rounded-[2.5rem] border-2 border-white/5 p-8 shadow-inner w-full overflow-hidden">
+                    <PlaylistProfile />
+                  </div>
+              </section>
+            </div>
         </div>
       </div>
 
@@ -227,7 +243,7 @@ const Profile = () => {
               <h3 className="text-3xl font-black uppercase font-display tracking-tight mb-10 text-white">PATCH_PROFILE</h3>
               <div className="space-y-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">HANDLE_ID</label>
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 ml-1">HANDLE_ID</label>
                   <input
                     type="text"
                     className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 font-mono text-sm focus:border-primary/50 outline-none transition-all text-white font-bold"
@@ -236,7 +252,7 @@ const Profile = () => {
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-500 ml-1">VISUAL_PATH_URL</label>
+                  <label className="text-[10px] font-mono font-black uppercase tracking-[0.4em] text-slate-400 ml-1">VISUAL_PATH_URL</label>
                   <input
                     type="url"
                     className="w-full bg-white/[0.03] border-2 border-white/5 rounded-2xl p-5 font-mono text-sm focus:border-primary/50 outline-none transition-all text-white font-bold"
@@ -245,7 +261,7 @@ const Profile = () => {
                   />
                 </div>
                 <div className="flex gap-6 pt-6">
-                  <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-4 text-[11px] font-mono font-black uppercase tracking-widest text-slate-600 hover:text-rose-500 transition-colors">
+                  <button onClick={() => setIsEditModalOpen(false)} className="flex-1 py-4 text-[11px] font-mono font-black uppercase tracking-widest text-slate-400 hover:text-rose-500 transition-colors">
                     ABORT
                   </button>
                   <button className="flex-[2] py-4 bg-primary text-black rounded-2xl text-[11px] font-mono font-black uppercase tracking-widest shadow-xl hover:scale-105 active:scale-95 transition-all" onClick={() => setIsEditModalOpen(false)}>

@@ -1,7 +1,8 @@
 import React from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence,motion } from 'framer-motion'
 import { Database, Plus, ShieldCheck, Terminal } from 'lucide-react'
 import CreateProblemForm from '../components/AddProblemForm'
+
 
 const AddProblem = () => {
   return (
@@ -26,7 +27,7 @@ const AddProblem = () => {
               Expand <span className="text-primary">The Lab</span><span className="text-white/20">_</span>
             </h1>
             
-            <p className="text-slate-500 font-mono text-[11px] font-bold uppercase tracking-widest max-w-xl leading-relaxed">
+            <p className="text-slate-400 font-mono text-[11px] font-bold uppercase tracking-widest max-w-xl leading-relaxed">
               Inject new computational challenges into the global database. 
               Validate all test cases against the core compilation engine.
             </p>
@@ -38,7 +39,7 @@ const AddProblem = () => {
                 <Database size={24} strokeWidth={2.5} />
              </div>
              <div>
-                <p className="text-[9px] font-mono font-black text-slate-600 uppercase tracking-[0.3em] mb-1">Database_Link</p>
+                <p className="text-[11px] font-mono font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Database_Link</p>
                 <p className="text-sm font-black font-display text-white uppercase tracking-tight">READY_FOR_INJECTION</p>
              </div>
           </div>
@@ -77,7 +78,7 @@ const AddProblem = () => {
 
         {/* Footer Technical Metadata */}
         <div className="mt-8 flex justify-between items-center opacity-20 px-4">
-           <span className="text-[8px] font-mono font-black uppercase tracking-[1em]">LeetLabs_Auth_v4.0.2</span>
+           <span className="text-[11px] font-mono font-black uppercase tracking-[1em]">LeetLabs_Auth_v4.0.2</span>
            <div className="flex gap-4">
               <div className="h-1 w-12 bg-white/20" />
               <div className="h-1 w-6 bg-primary" />

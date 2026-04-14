@@ -6,6 +6,7 @@ export const getJudge0LanguageId = (language)=>{
         "PYTHON":71,
         "JAVA":62,
         "JAVASCRIPT":63,
+        "JS":63
     }
     
     return languageMap[language.toUpperCase()];
@@ -17,7 +18,6 @@ export const submitBatch = async(submissions) =>{
         submissions
     });
 
-    console.log("Submission Results: ",data);
     return data; // This would be in the form of tokens; [{token},{token},{token}]
     }
 
@@ -54,7 +54,7 @@ export const pollBatchResults = async(tokens)=>{
         const isAllDone = results.every((r)=> r.status.id !==1 && r.status.id !==2)
 
         if(isAllDone) return results;
-        await sleep(1000);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 }
 

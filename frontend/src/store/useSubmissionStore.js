@@ -19,7 +19,6 @@ export const useSubmissionStore = create((set, get) => ({
         toast.success(res.data.message);
       }
     } catch (error) {
-      console.log("Error getting all submissions", error);
       toast.error("Error getting all submissions");
     } finally {
       set({ isLoading: false });
@@ -32,13 +31,11 @@ export const useSubmissionStore = create((set, get) => ({
         `/submission/get-submission/${problemId}`
       );
 
-      set({ submission: res.data.data });
+      set({ submissions: res.data.data || []});
 
-      
 
     } catch (error) {
-      console.log("Error getting submissions for problem", error);
-
+      set({ submissions: [] });
       toast.error("Error getting submissions for problem");
       
     } finally {
@@ -54,7 +51,6 @@ export const useSubmissionStore = create((set, get) => ({
 
       set({ submissionCount: res.data.data.count });
     } catch (error) {
-      console.log("Error getting submission count for problem", error);
       toast.error("Error getting submission count for problem");
     }
   },

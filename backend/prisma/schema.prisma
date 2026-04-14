@@ -49,7 +49,7 @@ model Problem {
   tags               String[]
   userId             String
   examples           Json
-  constraints        String
+  constraints        String?
   hints              String?
   editorial          String?
   testCases          Json
